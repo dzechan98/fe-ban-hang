@@ -1,3 +1,5 @@
+import { Page } from "@components/core";
+
 export const HomePage = () => {
-  return <div>Home page</div>;
+  return <Page title="Trang chủ">123</Page>;
 };
