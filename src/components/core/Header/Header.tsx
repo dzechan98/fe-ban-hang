@@ -1,20 +1,26 @@
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Tooltip from "@mui/material/Tooltip";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  Container,
+  Tooltip,
+  Badge,
+} from "@mui/material";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Search } from "./Search";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@router/constants";
 import { RouterLink } from "@components/core";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import { Badge } from "@mui/material";
+import { Search } from "./Search";
 
 export const Header = () => {
+  const navigate = useNavigate();
+
   return (
-    <AppBar position="static">
+    <AppBar>
       <Container maxWidth="lg">
         <Toolbar disableGutters>
           <RouterLink
@@ -28,7 +34,6 @@ export const Header = () => {
             <Typography
               variant="h6"
               noWrap
-              component="a"
               sx={{
                 mr: 2,
                 display: "flex",
@@ -46,6 +51,11 @@ export const Header = () => {
             <Search />
           </Box>
           <Box>
+            <Tooltip title="Tài khoản">
+              <IconButton onClick={() => navigate(ROUTES.login)}>
+                <PersonOutlineOutlinedIcon />
+              </IconButton>
+            </Tooltip>
             <Tooltip title="Giỏ hàng">
               <IconButton>
                 <Badge badgeContent="4" color="error">

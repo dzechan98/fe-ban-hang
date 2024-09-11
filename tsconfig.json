@@ -28,7 +28,8 @@
       "@hooks/*": ["src/hooks/*"],
       "@router/*": ["src/router/*"],
       "@api/*": ["src/api/*"],
-      "@layouts/*": ["src/layouts/*"]
+      "@layouts/*": ["src/layouts/*"],
+      "@utils/*": ["src/utils/*"]
     }
   },
   "include": ["src"],

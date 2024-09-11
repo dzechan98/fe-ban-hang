@@ -1,6 +1,6 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { ROUTES } from "./constants";
-import { PrivateRoute } from "./private-route";
+import { AuthRoute } from "./AuthRoute.tsx";
 import { DefaultLayout } from "@layouts/DefaultLayout";
 import {
   HomePage,
@@ -17,16 +17,21 @@ const useAppRouter = () => {
     {
       element: <DefaultLayout />,
       children: [
-        { path: ROUTES.login, element: <LoginPage /> },
-        { path: ROUTES.register, element: <RegisterPage /> },
         { path: ROUTES.home, element: <HomePage /> },
+        {
+          element: <AuthRoute />,
+          children: [
+            { path: ROUTES.login, element: <LoginPage /> },
+            { path: ROUTES.register, element: <RegisterPage /> },
+          ],
+        },
       ],
     },
     {
       element: <AdminLayout />,
       children: [
         {
-          element: <PrivateRoute />,
+          element: <AuthRoute />,
           children: [
             { path: ROUTES.home, element: <UsersPage /> },
             {

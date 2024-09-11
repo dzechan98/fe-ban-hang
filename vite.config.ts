@@ -13,6 +13,7 @@ export default defineConfig({
       "@router": path.resolve(__dirname, "./src/router"),
       "@api": path.resolve(__dirname, "./src/api"),
       "@layouts": path.resolve(__dirname, "./src/layouts"),
+      "@utils": path.resolve(__dirname, "./src/utils"),
     },
   },
   plugins: [react(), svgr()],

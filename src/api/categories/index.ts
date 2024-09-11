@@ -16,7 +16,12 @@ export interface CategoryResponse {
   updateAt: string;
 }
 
-const URL = "/categories/";
+export interface EditCategoryParams {
+  id: string;
+  input: Partial<CategoryInput>;
+}
+
+const URL = "/categories";
 
 export const useGetCategory = (id?: string) => {
   return useQuery({
@@ -55,11 +60,6 @@ export const useAddCategory = () => {
     },
   });
 };
-
-export interface EditCategoryParams {
-  id: string;
-  input: Partial<CategoryInput>;
-}
 
 export const useEditCategory = ({ queryKey }: Partial<QueryContext> = {}) => {
   const queryClient = useQueryClient();

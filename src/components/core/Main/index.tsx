@@ -6,11 +6,14 @@ export interface MainProps extends BoxProps {
 
 export const Main: React.FC<MainProps> = ({ children, ...rest }) => {
   return (
-    <Box component="main" flexGrow={1} {...rest}>
+    <Box
+      component="main"
+      flexGrow={1}
+      {...rest}
+      sx={{ bgcolor: "#f5f5f5", paddingTop: 10, minHeight: "100vh" }}
+    >
       <Container maxWidth="lg">
-        <Box sx={{ bgcolor: "#cfe8fc", height: "100vh", mt: 2 }}>
-          {children}
-        </Box>
+        <Box>{children}</Box>
       </Container>
     </Box>
   );

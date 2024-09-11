@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material";
 import App from "./App.tsx";
 import { theme } from "./theme.ts";
 import "./index.css";

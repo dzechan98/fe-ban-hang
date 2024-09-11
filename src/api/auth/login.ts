@@ -17,6 +17,7 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: async (input: LoginInput) => {
       const response = await instance.post<LoginResponse>(URL, input);
+      console.log(response);
 
       const { accessToken, refreshToken } = response.data;
       localStorage.setItem("accessToken", accessToken);
