@@ -10,7 +10,7 @@ export const Main: React.FC<MainProps> = ({ children, ...rest }) => {
       component="main"
       flexGrow={1}
       {...rest}
-      sx={{ bgcolor: "#f5f5f5", paddingTop: 10, minHeight: "100vh" }}
+      sx={{ bgcolor: "#f5f5f5", paddingTop: 15, minHeight: "100vh" }}
     >
       <Container maxWidth="lg">
         <Box>{children}</Box>

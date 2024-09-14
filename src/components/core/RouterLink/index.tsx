@@ -8,5 +8,14 @@ import {
 export type RouterLinkProps = LinkProps & ReactRouterLinkProps;
 
 export const RouterLink = forwardRef<HTMLAnchorElement, RouterLinkProps>(
-  (props, ref) => <Link ref={ref} component={ReactRouterLink} {...props} />
+  (props, ref) => (
+    <Link
+      ref={ref}
+      component={ReactRouterLink}
+      underline="none"
+      display="flex"
+      alignItems="center"
+      {...props}
+    />
+  )
 );

@@ -7,64 +7,134 @@ import {
   Container,
   Tooltip,
   Badge,
+  Popover,
+  Stack,
+  Avatar,
 } from "@mui/material";
-import AdbIcon from "@mui/icons-material/Adb";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@router/constants";
-import { RouterLink } from "@components/core";
+import { Logo, RouterLink } from "@components/core";
 import { Search } from "./Search";
+import { usePopover } from "@hooks/usePopover";
+import { useAuth } from "@contexts/UserContext";
+import { MenuAccount } from "./MenuAccount";
+import React from "react";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import FacebookIcon from "@mui/icons-material/Facebook";
+
+const links = {
+  ig: "https://www.instagram.com/dz3_chann",
+  fb: "https://www.facebook.com/dzeechan98/",
+};
 
 export const Header = () => {
-  const navigate = useNavigate();
+  const { user } = useAuth();
+  const authPopover = usePopover("auth");
+
+  const handleClickAccount = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    if (user) {
+      authPopover.handleOpen(e);
+    }
+  };
 
   return (
     <AppBar>
       <Container maxWidth="lg">
         <Toolbar disableGutters>
-          <RouterLink
-            to={ROUTES.home}
-            underline="none"
-            color="success"
-            display="flex"
-            alignItems="center"
-          >
-            <AdbIcon sx={{ display: "flex", mr: 1 }} />
-            <Typography
-              variant="h6"
-              noWrap
-              sx={{
-                mr: 2,
-                display: "flex",
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
+          <Stack flexGrow={1}>
+            <Stack
+              direction="row"
+              paddingTop={1}
+              justifyContent="space-between"
             >
-              LOGO
-            </Typography>
-          </RouterLink>
-          <Box sx={{ flexGrow: 1, paddingX: 10 }}>
-            <Search />
-          </Box>
-          <Box>
-            <Tooltip title="Tài khoản">
-              <IconButton onClick={() => navigate(ROUTES.login)}>
-                <PersonOutlineOutlinedIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Giỏ hàng">
-              <IconButton>
-                <Badge badgeContent="4" color="error">
-                  <ShoppingCartOutlinedIcon />
-                </Badge>
-              </IconButton>
-            </Tooltip>
-          </Box>
+              <Stack direction="row" columnGap={1} alignItems="center">
+                <Typography fontSize="13px">Kênh người bán</Typography>
+                <Typography fontSize="13px">Tải ứng dụng</Typography>
+                <Stack direction="row" alignItems="center" columnGap={0.75}>
+                  <Typography fontSize="13px">Kết nối</Typography>
+                  <RouterLink to={links.fb}>
+                    <FacebookIcon sx={{ color: "white", fontSize: "16px" }} />
+                  </RouterLink>
+                  <RouterLink to={links.ig}>
+                    <InstagramIcon sx={{ color: "white", fontSize: "16px" }} />
+                  </RouterLink>
+                </Stack>
+              </Stack>
+              <Stack
+                direction="row"
+                columnGap={1}
+                alignItems="center"
+                sx={{ cursor: "pointer" }}
+                onClick={handleClickAccount}
+              >
+                {user ? (
+                  <Tooltip title="Tài khoản">
+                    <Stack direction="row" columnGap={1} alignItems="center">
+                      <Avatar
+                        src={user.image}
+                        alt="user-avatar"
+                        sx={{
+                          width: 24,
+                          height: 24,
+                        }}
+                      />
+                      <Typography fontSize="13px">{user.name}</Typography>
+                    </Stack>
+                  </Tooltip>
+                ) : (
+                  <>
+                    <RouterLink to={ROUTES.register}>
+                      <Typography fontSize="13px" color="white">
+                        Đăng ký
+                      </Typography>
+                    </RouterLink>
+                    <RouterLink to={ROUTES.login}>
+                      <Typography fontSize="13px" color="white">
+                        Đăng nhập
+                      </Typography>
+                    </RouterLink>
+                  </>
+                )}
+              </Stack>
+            </Stack>
+            <Stack direction="row" paddingY={2}>
+              <Logo size="large">
+                <Typography fontWeight="600" color="white">
+                  VStore
+                </Typography>
+              </Logo>
+              <Box sx={{ flexGrow: 1, paddingX: 10 }}>
+                <Search />
+              </Box>
+              <Box>
+                <Tooltip title="Giỏ hàng">
+                  <IconButton>
+                    <Badge badgeContent="4" color="error">
+                      <ShoppingCartOutlinedIcon sx={{ color: "white" }} />
+                    </Badge>
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Stack>
+          </Stack>
         </Toolbar>
+        <Popover
+          open={authPopover.open}
+          anchorEl={authPopover.anchorEl}
+          onClose={authPopover.handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          <MenuAccount />
+        </Popover>
       </Container>
     </AppBar>
   );

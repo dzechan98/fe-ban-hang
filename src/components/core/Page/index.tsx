@@ -10,5 +10,9 @@ export interface PageProps extends BoxProps {
 export const Page = ({ children, title, ...props }: PageProps) => {
   useTitle(title);
 
-  return <Box {...props}>{children}</Box>;
+  return (
+    <Box {...props} height="100%">
+      {children}
+    </Box>
+  );
 };

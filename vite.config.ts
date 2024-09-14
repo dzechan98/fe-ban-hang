@@ -14,6 +14,7 @@ export default defineConfig({
       "@api": path.resolve(__dirname, "./src/api"),
       "@layouts": path.resolve(__dirname, "./src/layouts"),
       "@utils": path.resolve(__dirname, "./src/utils"),
+      "@contexts": path.resolve(__dirname, "./src/contexts"),
     },
   },
   plugins: [react(), svgr()],

@@ -1,7 +1,7 @@
 import instance from "@api/instance";
 import { useQuery } from "@tanstack/react-query";
 
-interface UserResponse {
+export interface UserResponse {
   _id: string;
   email: string;
   isAdmin: boolean;
@@ -14,13 +14,14 @@ interface UserResponse {
 
 const URL = "/users/profile/me";
 
-export const useGetMe = () => {
+export const useGetMe = (accessToken?: string | null) => {
   return useQuery({
-    queryKey: ["me"],
+    queryKey: ["me", accessToken],
     queryFn: async () => {
       const { data } = await instance.get<UserResponse>(URL);
 
       return data;
     },
+    enabled: !!accessToken,
   });
 };

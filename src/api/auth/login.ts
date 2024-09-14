@@ -1,14 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import instance from "../instance";
+import { AuthResponse } from "@api/type";
 
 export interface LoginInput {
   email: string;
   password: string;
-}
-
-export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
 }
 
 const URL = "/auth/login";
@@ -16,8 +12,7 @@ const URL = "/auth/login";
 export const useLogin = () => {
   return useMutation({
     mutationFn: async (input: LoginInput) => {
-      const response = await instance.post<LoginResponse>(URL, input);
-      console.log(response);
+      const response = await instance.post<AuthResponse>(URL, input);
 
       const { accessToken, refreshToken } = response.data;
       localStorage.setItem("accessToken", accessToken);
