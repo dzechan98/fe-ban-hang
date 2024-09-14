@@ -1,3 +1,4 @@
+import { Footer } from "@components/core";
 import { Box, BoxProps, Container } from "@mui/material";
 
 export interface MainProps extends BoxProps {
@@ -14,6 +15,7 @@ export const Main: React.FC<MainProps> = ({ children, ...rest }) => {
     >
       <Container maxWidth="lg">
         <Box>{children}</Box>
+        <Footer />
       </Container>
     </Box>
   );

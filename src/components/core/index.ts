@@ -5,3 +5,4 @@ export * from "./Header";
 export * from "./RouterLink";
 export * from "./Main";
 export * from "./Logo";
+export * from "./Footer";

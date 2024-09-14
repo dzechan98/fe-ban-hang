@@ -22,11 +22,6 @@ import React from "react";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
 
-const links = {
-  ig: "https://www.instagram.com/dz3_chann",
-  fb: "https://www.facebook.com/dzeechan98/",
-};
-
 export const Header = () => {
   const { user } = useAuth();
   const authPopover = usePopover("auth");
@@ -54,10 +49,10 @@ export const Header = () => {
                 <Typography fontSize="13px">Tải ứng dụng</Typography>
                 <Stack direction="row" alignItems="center" columnGap={0.75}>
                   <Typography fontSize="13px">Kết nối</Typography>
-                  <RouterLink to={links.fb}>
+                  <RouterLink to={ROUTES.home}>
                     <FacebookIcon sx={{ color: "white", fontSize: "16px" }} />
                   </RouterLink>
-                  <RouterLink to={links.ig}>
+                  <RouterLink to={ROUTES.home}>
                     <InstagramIcon sx={{ color: "white", fontSize: "16px" }} />
                   </RouterLink>
                 </Stack>
