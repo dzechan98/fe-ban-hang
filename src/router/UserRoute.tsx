@@ -15,5 +15,5 @@ export const UserRoute: React.FC = () => {
     }
   }, [data, setUser]);
 
-  return data ? <Outlet /> : <Navigate to={ROUTES.login} />;
+  return <Outlet />;
 };

@@ -7,6 +7,9 @@ export const theme = createTheme({
         root: {
           textTransform: "none",
         },
+        sizeMedium: {
+          height: "48px",
+        },
         sizeLarge: {
           height: "56px",
         },

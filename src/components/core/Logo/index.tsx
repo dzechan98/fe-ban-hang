@@ -1,10 +1,12 @@
 import logo from "@assets/logo.png";
 import { RouterLink } from "@components/core";
+import { Typography } from "@mui/material";
 import { ROUTES } from "@router/constants";
 
 interface LogoProps {
   size?: "small" | "medium" | "large";
-  children?: React.ReactNode;
+  showTitle?: boolean;
+  color?: "white" | "primary.main";
 }
 
 enum LogoEnum {
@@ -13,10 +15,15 @@ enum LogoEnum {
   large = 36,
 }
 
-export const Logo = ({ size = "small", children }: LogoProps) => {
+export const Logo = ({
+  size = "small",
+  showTitle = false,
+  color = "primary.main",
+}: LogoProps) => {
   return (
     <RouterLink
       to={ROUTES.home}
+      color={color}
       sx={{
         display: "flex",
         alignItems: "center",
@@ -28,7 +35,11 @@ export const Logo = ({ size = "small", children }: LogoProps) => {
         width={LogoEnum[size]}
         alt="logo"
       />
-      {children}
+      {showTitle && (
+        <Typography fontSize="18px" fontWeight="600">
+          VStore
+        </Typography>
+      )}
     </RouterLink>
   );
 };

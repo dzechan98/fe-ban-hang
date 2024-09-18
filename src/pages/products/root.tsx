@@ -1,3 +1,10 @@
+import { Page } from "@components/core";
+import { ProductForm } from "@components/modules";
+
 export const ProductsPage = () => {
-  return <div>Products page</div>;
+  return (
+    <Page title="Danh sách sản phẩm">
+      <ProductForm />
+    </Page>
+  );
 };

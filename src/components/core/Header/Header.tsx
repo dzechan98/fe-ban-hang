@@ -95,11 +95,7 @@ export const Header = () => {
               </Stack>
             </Stack>
             <Stack direction="row" paddingY={2}>
-              <Logo size="large">
-                <Typography fontWeight="600" color="white">
-                  VStore
-                </Typography>
-              </Logo>
+              <Logo size="large" showTitle color="white" />
               <Box sx={{ flexGrow: 1, paddingX: 10 }}>
                 <Search />
               </Box>

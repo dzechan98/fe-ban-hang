@@ -14,9 +14,9 @@ export const Main: React.FC<MainProps> = ({ children, ...rest }) => {
       sx={{ bgcolor: "#f5f5f5", paddingTop: 15, minHeight: "100vh" }}
     >
       <Container maxWidth="lg">
-        <Box>{children}</Box>
-        <Footer />
+        <Box marginBottom={3}>{children}</Box>
       </Container>
+      <Footer />
     </Box>
   );
 };

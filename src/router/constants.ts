@@ -5,6 +5,7 @@ export const ROUTES = {
   dashboard: "/dashboard",
   forgotPassword: "/forgot-password",
   profile: "/profile",
+  productDetail: "/products/:id",
   users: {
     root: "/users",
   },
@@ -18,4 +19,5 @@ export const ROUTES = {
     new: "/products/new",
     edit: "/products/:id",
   },
+  orders: "/orders",
 };

@@ -1,10 +1,25 @@
 import { Page } from "@components/core";
-import { ListCategory } from "@components/modules";
+import { ListCategories, ListProducts } from "@components/modules";
+import { Box, Stack, Typography } from "@mui/material";
 
 export const HomePage = () => {
   return (
     <Page title="Trang chủ">
-      <ListCategory />
+      <ListCategories />
+      <Stack alignItems="center" gap={2} marginY={2}>
+        <Box
+          paddingY={2}
+          bgcolor="white"
+          borderBottom={3}
+          borderColor="primary.main"
+          width="100%"
+        >
+          <Typography textAlign="center" color="primary" fontWeight={600}>
+            GỢI Ý CHO BẠN
+          </Typography>
+        </Box>
+        <ListProducts />
+      </Stack>
     </Page>
   );
 };

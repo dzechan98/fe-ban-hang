@@ -30,7 +30,7 @@ export const AuthLayout = ({ isLogin, children }: AuthLayoutProps) => {
           padding: "40px",
         }}
       >
-        <Logo size="large" />
+        <Logo size="large" showTitle />
         <Typography fontSize="24px" fontWeight="600" color="primary">
           {isLogin ? "Đăng nhập" : "Đăng ký tài khoản"}
         </Typography>

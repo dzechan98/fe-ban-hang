@@ -2,13 +2,15 @@ import { useListCategories } from "@api/categories";
 import { Box, Typography, Grid2 } from "@mui/material";
 import { capitalizeWords } from "@utils/capitalizeWords";
 
-export const ListCategory = () => {
+export const ListCategories = () => {
   const { data } = useListCategories(1, 100);
 
   return (
     <Box sx={{ bgcolor: "white" }}>
       <Box padding={2}>
-        <Typography>DANH MỤC</Typography>
+        <Typography color="primary" fontWeight={600}>
+          DANH MỤC
+        </Typography>
       </Box>
       <Grid2 container>
         {data &&

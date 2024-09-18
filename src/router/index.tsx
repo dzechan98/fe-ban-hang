@@ -8,6 +8,7 @@ import {
   RegisterPage,
   UsersPage,
   ProductsPage,
+  ProductDetailPage,
 } from "../pages";
 import { DefaultLayout } from "@layouts/DefaultLayout";
 import { AdminLayout } from "@layouts/AdminLayout";
@@ -24,7 +25,24 @@ const useAppRouter = () => {
           children: [
             {
               element: <DefaultLayout />,
-              children: [{ path: ROUTES.home, element: <HomePage /> }],
+              children: [
+                { path: ROUTES.home, element: <HomePage /> },
+                { path: ROUTES.productDetail, element: <ProductDetailPage /> },
+              ],
+            },
+            {
+              element: <AdminLayout />,
+              children: [
+                { path: ROUTES.dashboard, element: <UsersPage /> },
+                {
+                  path: ROUTES.categories.root,
+                  children: [{ index: true, element: <CategoryPage /> }],
+                },
+                {
+                  path: ROUTES.products.root,
+                  element: <ProductsPage />,
+                },
+              ],
             },
           ],
         },
@@ -35,25 +53,20 @@ const useAppRouter = () => {
             { path: ROUTES.register, element: <RegisterPage /> },
           ],
         },
-        {
-          element: <AdminLayout />,
-          children: [
-            {
-              element: <AuthRoute />,
-              children: [
-                { path: ROUTES.home, element: <UsersPage /> },
-                {
-                  path: ROUTES.categories.root,
-                  children: [{ index: true, element: <CategoryPage /> }],
-                },
-                {
-                  path: ROUTES.products.root,
-                  children: [{ index: true, element: <ProductsPage /> }],
-                },
-              ],
-            },
-          ],
-        },
+        // {
+        //   element: <AdminLayout />,
+        //   children: [
+        //     { path: ROUTES.dashboard, element: <UsersPage /> },
+        //     {
+        //       path: ROUTES.categories.root,
+        //       children: [{ index: true, element: <CategoryPage /> }],
+        //     },
+        //     {
+        //       path: ROUTES.products.root,
+        //       element: <ProductsPage />,
+        //     },
+        //   ],
+        // },
       ],
     },
   ]);
