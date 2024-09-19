@@ -1,6 +1,5 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { ROUTES } from "./constants";
-import { AuthRoute } from "./AuthRoute.tsx";
 import {
   HomePage,
   LoginPage,
@@ -9,11 +8,13 @@ import {
   UsersPage,
   ProductsPage,
   ProductDetailPage,
+  CreateProductPage,
+  EditProductPage,
 } from "../pages";
 import { DefaultLayout } from "@layouts/DefaultLayout";
 import { AdminLayout } from "@layouts/AdminLayout";
-import AuthProvider from "@contexts/UserContext";
-import { UserRoute } from "@router/UserRoute.tsx";
+import { PrivateRoute } from "@router/PrivateRoute.tsx";
+import { AuthProvider } from "@contexts/UserContext.tsx";
 
 const useAppRouter = () => {
   return createBrowserRouter([
@@ -21,52 +22,43 @@ const useAppRouter = () => {
       element: <AuthProvider />,
       children: [
         {
-          element: <UserRoute />,
+          element: <DefaultLayout />,
           children: [
-            {
-              element: <DefaultLayout />,
-              children: [
-                { path: ROUTES.home, element: <HomePage /> },
-                { path: ROUTES.productDetail, element: <ProductDetailPage /> },
-              ],
-            },
+            { path: ROUTES.home, element: <HomePage /> },
+            { path: ROUTES.productDetail, element: <ProductDetailPage /> },
+          ],
+        },
+        {
+          element: <PrivateRoute adminRoute />,
+          children: [
             {
               element: <AdminLayout />,
               children: [
-                { path: ROUTES.dashboard, element: <UsersPage /> },
                 {
                   path: ROUTES.categories.root,
                   children: [{ index: true, element: <CategoryPage /> }],
                 },
                 {
                   path: ROUTES.products.root,
-                  element: <ProductsPage />,
+                  children: [
+                    { index: true, element: <ProductsPage /> },
+                    {
+                      path: ROUTES.products.new,
+                      element: <CreateProductPage />,
+                    },
+                    {
+                      path: ROUTES.products.edit,
+                      element: <EditProductPage />,
+                    },
+                  ],
                 },
+                { path: ROUTES.dashboard, element: <UsersPage /> },
               ],
             },
           ],
         },
-        {
-          element: <AuthRoute />,
-          children: [
-            { path: ROUTES.login, element: <LoginPage /> },
-            { path: ROUTES.register, element: <RegisterPage /> },
-          ],
-        },
-        // {
-        //   element: <AdminLayout />,
-        //   children: [
-        //     { path: ROUTES.dashboard, element: <UsersPage /> },
-        //     {
-        //       path: ROUTES.categories.root,
-        //       children: [{ index: true, element: <CategoryPage /> }],
-        //     },
-        //     {
-        //       path: ROUTES.products.root,
-        //       element: <ProductsPage />,
-        //     },
-        //   ],
-        // },
+        { path: ROUTES.login, element: <LoginPage /> },
+        { path: ROUTES.register, element: <RegisterPage /> },
       ],
     },
   ]);

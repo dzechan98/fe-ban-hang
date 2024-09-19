@@ -14,16 +14,9 @@ export interface ProductInput {
   images: string[];
 }
 
-export interface ProductResponse {
+export interface ProductResponse extends Omit<ProductInput, "category"> {
   _id: string;
-  title: string;
-  description: string;
-  price: number;
   category: CategoryResponse;
-  quantity: number;
-  color: string;
-  image_thumbnail: string;
-  images: string[];
   sold: number;
   createdAt: string;
   updateAt: string;
@@ -91,16 +84,33 @@ export const useEditProduct = ({ queryKey }: Partial<QueryContext> = {}) => {
 
   return useMutation({
     mutationFn: async ({ id, input }: EditProductParams) => {
-      const { data } = await instance.patch<ProductResponse>(
+      const { data } = await instance.put<ProductResponse>(
         `${URL}/${id}`,
         input
       );
 
       return data;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       if (queryKey) {
-        queryClient.invalidateQueries({ queryKey });
+        await queryClient.invalidateQueries({ queryKey });
+      }
+    },
+  });
+};
+
+export const useDeleteProduct = ({ queryKey }: Partial<QueryContext> = {}) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { data } = await instance.delete(`${URL}/${id}`);
+
+      return data;
+    },
+    onSuccess: async () => {
+      if (queryKey) {
+        await queryClient.invalidateQueries({ queryKey });
       }
     },
   });

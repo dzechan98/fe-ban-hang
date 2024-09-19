@@ -14,7 +14,6 @@ export const useRegister = () => {
   return useMutation({
     mutationFn: async (input: RegisterInput) => {
       const response = await instance.post<AuthResponse>(URL, input);
-      console.log(response);
 
       const { accessToken, refreshToken } = response.data;
       localStorage.setItem("accessToken", accessToken);

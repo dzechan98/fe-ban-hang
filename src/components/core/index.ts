@@ -11,3 +11,6 @@ export * from "./Product";
 export * from "./ProductLoading";
 export * from "./Quantity";
 export * from "./UploadImage";
+export * from "./Select";
+export * from "./Table";
+export * from "./ConfirmDialog";

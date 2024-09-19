@@ -10,15 +10,6 @@ import { useState } from "react";
 import { useAuth } from "@contexts/UserContext";
 import { ListProducts, SlideImage } from "@components/modules";
 
-const images = [
-  "https://media.istockphoto.com/id/1127245421/fr/photo/mains-de-femme-priant-pour-la-b%C3%A9n%C3%A9diction-de-dieu-sur-fond-de-coucher-de-soleil.webp?a=1&b=1&s=612x612&w=0&k=20&c=aQlLJKV2XmtJOzUV7bSbqrriGrJH7H2oNlicr3nOzOw=",
-  "https://media.istockphoto.com/id/1127245421/fr/photo/mains-de-femme-priant-pour-la-b%C3%A9n%C3%A9diction-de-dieu-sur-fond-de-coucher-de-soleil.webp?a=1&b=1&s=612x612&w=0&k=20&c=aQlLJKV2XmtJOzUV7bSbqrriGrJH7H2oNlicr3nOzOw=",
-  "https://media.istockphoto.com/id/1127245421/fr/photo/mains-de-femme-priant-pour-la-b%C3%A9n%C3%A9diction-de-dieu-sur-fond-de-coucher-de-soleil.webp?a=1&b=1&s=612x612&w=0&k=20&c=aQlLJKV2XmtJOzUV7bSbqrriGrJH7H2oNlicr3nOzOw=",
-  "https://media.istockphoto.com/id/1268636389/fr/photo/femme-asiatique-chinoise-adulte-moyen-aidant-son-p%C3%A8re-dans-la-serre-de-ferme.webp?a=1&b=1&s=612x612&w=0&k=20&c=Turx_tpbmXRqDGP0CEHl3dVybh5WjGDGEJXp5JtV1Vc=",
-  "https://media.istockphoto.com/id/1009803562/fr/photo/groupe-de-personnes-sur-la-cr%C3%AAte-alpinisme-aidant-l%C3%A9quipe-travail-voyage-randonn%C3%A9e-concept.webp?a=1&b=1&s=612x612&w=0&k=20&c=FlXQ09Ap5pSas7Xc8vVTVLAC1EwE3LztQCF6T_cIakY=",
-  "https://media.istockphoto.com/id/664966806/fr/photo/super-h%C3%A9ros-joyeux-enfants-exprimant-concept-de-positivit%C3%A9.webp?a=1&b=1&s=612x612&w=0&k=20&c=1o6m7DLGnXWl4arStgTrEe2HB0dAg0ZH4mExcS3wCjs=",
-];
-
 export const ProductDetailPage = () => {
   const { id } = useParams();
   const { user } = useAuth();
@@ -65,7 +56,7 @@ export const ProductDetailPage = () => {
               gap={2}
             >
               <Stack width={450}>
-                <SlideImage images={images} />
+                <SlideImage images={data.images} />
               </Stack>
               <Stack></Stack>
               <Stack flexGrow={1} gap={2}>

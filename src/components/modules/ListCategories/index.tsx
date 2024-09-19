@@ -3,7 +3,7 @@ import { Box, Typography, Grid2 } from "@mui/material";
 import { capitalizeWords } from "@utils/capitalizeWords";
 
 export const ListCategories = () => {
-  const { data } = useListCategories(1, 100);
+  const { data } = useListCategories({});
 
   return (
     <Box sx={{ bgcolor: "white" }}>

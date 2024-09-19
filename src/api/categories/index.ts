@@ -35,7 +35,13 @@ export const useGetCategory = (id?: string) => {
   });
 };
 
-export const useListCategories = (page: number, limit: number) => {
+export const useListCategories = ({
+  page = 1,
+  limit = 100,
+}: {
+  page?: number;
+  limit?: number;
+}) => {
   return useQuery({
     queryKey: ["listCategories", page, limit],
     queryFn: async () => {

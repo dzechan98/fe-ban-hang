@@ -1,19 +1,42 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { UserResponse as User } from "@api/users";
 import { ROUTES } from "@router/constants";
+import { useGetMe } from "@api/users";
 
-type UserContextType = {
+type AuthContextType = {
   user?: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  isLoading: boolean;
   signOut: () => void;
 };
 
-const AuthContext = createContext<UserContextType>({} as UserContextType);
+const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-const AuthProvider = () => {
+export const AuthProvider = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+
+  const accessToken = localStorage.getItem("accessToken");
+  const { data, error } = useGetMe(accessToken);
+
+  useEffect(() => {
+    if (accessToken) {
+      if (data) {
+        setUser(data);
+        setIsLoading(false);
+        return;
+      }
+
+      if (error) {
+        signOut();
+      }
+      return;
+    }
+
+    setIsLoading(false);
+    navigate(ROUTES.login);
+  }, [data, error, accessToken, navigate]);
 
   const signOut = () => {
     setUser(null);
@@ -23,18 +46,10 @@ const AuthProvider = () => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, signOut }}>
+    <AuthContext.Provider value={{ user, isLoading, signOut }}>
       <Outlet />
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = (): UserContextType => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within AuthProvider");
-  }
-  return context;
-};
-
-export default AuthProvider;
+export const useAuth = () => useContext(AuthContext);

@@ -1,70 +1,122 @@
-import { useLogin } from "@api/auth";
-import { ProductInput } from "@api/products";
-import { RHFTextField, UploadImage } from "@components/core";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { CategoryResponse, useListCategories } from "@api/categories";
 import {
-  Button,
-  CircularProgress,
-  Grid2,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { useMemo } from "react";
+  ProductInput,
+  useAddProduct,
+  useEditProduct,
+  useGetProduct,
+} from "@api/products";
+import { RHFSelect, RHFTextField, UploadImage } from "@components/core";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Button, Grid2, Stack } from "@mui/material";
+import { ROUTES } from "@router/constants";
+import { capitalizeWords } from "@utils/capitalizeWords";
+import { getError } from "@utils/getError";
+import { useEffect, useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useMatch, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import * as yup from "yup";
 
-type ProductForm = ProductInput;
+const categoryOptions = (categories: CategoryResponse[]) => {
+  return categories.map((category) => ({
+    label: capitalizeWords(category.title),
+    value: category._id,
+  }));
+};
 
 export const ProductForm = () => {
-  const { mutate, isPending } = useLogin();
+  const isAddMode = Boolean(useMatch(ROUTES.products.new));
+  const { id } = useParams();
+
+  const { data: product } = useGetProduct(id);
+  const { data: listCategories } = useListCategories({});
+
+  const addProductMutation = useAddProduct();
+  const editProductMutation = useEditProduct();
+
+  const [resetImages, setResetImage] = useState(false);
+  const navigate = useNavigate();
 
   const productSchema = useMemo(
     () =>
       yup.object({
         title: yup.string().required(),
         description: yup.string().required(),
-        quantity: yup.number().required(),
-        price: yup.number().required(),
+        quantity: yup
+          .number()
+          .required()
+          .min(0, "Số lượng của sản phẩm không thể âm"),
+        price: yup.number().required().min(0, "Giá của sản phẩm không thể âm"),
         category: yup.string().required(),
         color: yup.string().required(),
         images: yup
           .array()
-          .of(yup.mixed())
-          .min(1, "Cần ít nhất một hình ảnh sản phẩm"),
-        image_thumbnail: yup.mixed().required("Hình ảnh đại diện là bắt buộc"),
+          .of(yup.string().required("URL hình ảnh không hợp lệ"))
+          .min(1, "Cần ít nhất một hình ảnh sản phẩm")
+          .max(6, "Tối đa là 6 hình ảnh sản phẩm")
+          .default([]),
+        image_thumbnail: yup.string().required("Hình ảnh đại diện là bắt buộc"),
       }),
     []
   );
 
-  const { control, handleSubmit } = useForm<ProductForm>({
+  const { control, handleSubmit, reset, setValue } = useForm<ProductInput>({
     resolver: yupResolver(productSchema),
-    defaultValues: {
-      images: [],
-      image_thumbnail: null,
-    },
   });
 
-  const onSubmit = handleSubmit((value) => {
-    const formData = new FormData();
-    Object.entries(value).forEach(([key, val]) => {
-      if (key === "images") {
-        (val as File[]).forEach((file, index) => {
-          formData.append(`images[${index}]`, file);
+  const onSubmit = handleSubmit(async (value) => {
+    console.log(value);
+
+    if (!id) {
+      try {
+        await addProductMutation.mutateAsync(value);
+        toast.success("Thêm sản phẩm thành công");
+        reset({
+          title: "",
+          description: "",
+          color: "",
+          price: undefined,
+          quantity: undefined,
+          category: "",
+          image_thumbnail: "",
+          images: [],
         });
-      } else if (key === "image_thumbnail") {
-        formData.append("image_thumbnail", val as File);
-      } else {
-        formData.append(key, val as string | Blob);
+        setResetImage(!resetImages);
+      } catch (error) {
+        toast.error(getError(error));
       }
-    });
-    console.log("Form Data:", Object.fromEntries(formData));
+
+      return;
+    }
+
+    try {
+      await editProductMutation.mutateAsync({ id, input: value });
+      toast.success("Cập nhật sản phẩm thành công");
+      navigate(-1);
+    } catch (error) {
+      toast.error(getError(error));
+    }
   });
+
+  useEffect(() => {
+    if (product) {
+      setValue("title", product.title);
+      setValue("description", product.description);
+      setValue("color", product.color);
+      setValue("price", product.price);
+      setValue("image_thumbnail", product.image_thumbnail);
+      setValue("quantity", product.quantity);
+      setValue("images", product.images);
+      setValue("category", product.category._id);
+      setResetImage(!resetImages);
+    }
+  }, [product, setValue]);
 
   return (
     <form onSubmit={onSubmit}>
       <Stack gap={2}>
         <Grid2 container spacing={2}>
-          <Grid2 size={4}>
+          <Grid2 size={12}>
             <RHFTextField
               label="Tên sản phẩm"
               controlProps={{
@@ -76,21 +128,15 @@ export const ProductForm = () => {
               }}
             />
           </Grid2>
-          <Grid2 size={4}>
-            <RHFTextField
-              label="Mô tả sản phẩm"
-              controlProps={{
-                name: "description",
-                control,
-              }}
-              textFieldProps={{
-                fullWidth: true,
-                multiline: true,
-                rows: 3,
-              }}
+          <Grid2 size={6}>
+            <RHFSelect
+              name="category"
+              label="Danh mục"
+              control={control}
+              options={categoryOptions(listCategories?.results ?? [])}
             />
           </Grid2>
-          <Grid2 size={4}>
+          <Grid2 size={6}>
             <RHFTextField
               label="Số lượng"
               controlProps={{
@@ -103,7 +149,7 @@ export const ProductForm = () => {
               }}
             />
           </Grid2>
-          <Grid2 size={4}>
+          <Grid2 size={6}>
             <RHFTextField
               label="Giá"
               controlProps={{
@@ -116,7 +162,7 @@ export const ProductForm = () => {
               }}
             />
           </Grid2>
-          <Grid2 size={4}>
+          <Grid2 size={6}>
             <RHFTextField
               label="Màu sắc"
               controlProps={{
@@ -128,15 +174,17 @@ export const ProductForm = () => {
               }}
             />
           </Grid2>
-          <Grid2 size={4}>
+          <Grid2 size={12}>
             <RHFTextField
-              label="Danh mục"
+              label="Mô tả sản phẩm"
               controlProps={{
-                name: "category",
+                name: "description",
                 control,
               }}
               textFieldProps={{
                 fullWidth: true,
+                multiline: true,
+                rows: 4,
               }}
             />
           </Grid2>
@@ -151,6 +199,8 @@ export const ProductForm = () => {
                   error={!!error}
                   helperText={error?.message}
                   multiple
+                  reset={resetImages}
+                  initialImages={product?.images ?? []}
                 />
               )}
             />
@@ -165,18 +215,23 @@ export const ProductForm = () => {
                   onChange={(files) => field.onChange(files[0])}
                   error={!!error}
                   helperText={error?.message}
+                  reset={resetImages}
+                  initialImages={
+                    product?.image_thumbnail ? [product.image_thumbnail] : []
+                  }
                 />
               )}
             />
           </Grid2>
         </Grid2>
-        <Button type="submit" variant="outlined" size="large">
-          {isPending ? (
-            <CircularProgress size={26} />
-          ) : (
-            <Typography fontWeight="600">Thêm sản phẩm</Typography>
-          )}
-        </Button>
+        <Stack direction="row" gap={2} justifyContent="flex-end">
+          <Button variant="outlined" color="error" onClick={() => navigate(-1)}>
+            Quay lại
+          </Button>
+          <Button type="submit" variant="outlined">
+            {isAddMode ? "Thêm sản phẩm" : "Cập nhật sản phẩm"}
+          </Button>
+        </Stack>
       </Stack>
     </form>
   );

@@ -10,7 +10,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import GroupIcon from "@mui/icons-material/Group";
-import { Navigate as RRDNavigate, Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { Logo, Navigate } from "@components/core";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import CategoryIcon from "@mui/icons-material/Category";
@@ -19,6 +19,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { ROUTES } from "@router/constants";
 import { useAuth } from "@contexts/UserContext";
 import { capitalizeWords } from "@utils/capitalizeWords";
+import { Button, Stack } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const drawerWidth = 240;
 
@@ -54,10 +56,6 @@ export const AdminLayout = () => {
   const { user } = useAuth();
   const location = useLocation();
 
-  if (!user?.isAdmin) {
-    return <RRDNavigate to={ROUTES.home} />;
-  }
-
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar
@@ -66,7 +64,7 @@ export const AdminLayout = () => {
       >
         <Toolbar>
           <Typography variant="h6" noWrap component="div">
-            {`Xin chào ${capitalizeWords(user.email.toLowerCase())}`}
+            {user && `Xin chào ${capitalizeWords(user.email.toLowerCase())}`}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -74,40 +72,57 @@ export const AdminLayout = () => {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
+          height: "100vh",
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
           },
         }}
         variant="permanent"
-        // anchor="left"
       >
-        <Toolbar
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Logo size="large" showTitle />
-        </Toolbar>
-        <Divider />
-        <List>
-          {listItems.map(({ title, icon: Icon, path }) => (
-            <Navigate key={title} to={path}>
-              <ListItem disablePadding color="inherit">
-                <ListItemButton color="inherit">
-                  <ListItemIcon color="white">
-                    <Icon
-                      color={location.pathname === path ? "primary" : "inherit"}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={title} color="inherit" />
-                </ListItemButton>
-              </ListItem>
-            </Navigate>
-          ))}
-        </List>
+        <Stack height="100%" justifyContent="space-between">
+          <Stack>
+            <Toolbar
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Logo size="large" showTitle />
+            </Toolbar>
+            <Divider />
+            <List>
+              {listItems.map(({ title, icon: Icon, path }) => (
+                <Navigate key={title} to={path}>
+                  <ListItem disablePadding color="inherit">
+                    <ListItemButton color="inherit">
+                      <ListItemIcon color="white">
+                        <Icon
+                          color={
+                            location.pathname.includes(path)
+                              ? "primary"
+                              : "inherit"
+                          }
+                        />
+                      </ListItemIcon>
+                      <ListItemText primary={title} color="inherit" />
+                    </ListItemButton>
+                  </ListItem>
+                </Navigate>
+              ))}
+            </List>
+          </Stack>
+          <Button
+            variant="outlined"
+            startIcon={<LogoutIcon />}
+            sx={{
+              margin: "10px 20px",
+            }}
+          >
+            Đăng xuất
+          </Button>
+        </Stack>
       </Drawer>
       <Box
         component="main"
