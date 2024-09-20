@@ -31,6 +31,11 @@ const listItems = [
     path: ROUTES.dashboard,
   },
   {
+    title: "Tài khoản",
+    icon: GroupIcon,
+    path: ROUTES.users.root,
+  },
+  {
     title: "Sản phẩm",
     icon: InventoryIcon,
     path: ROUTES.products.root,
@@ -39,11 +44,6 @@ const listItems = [
     title: "Danh mục",
     icon: CategoryIcon,
     path: ROUTES.categories.root,
-  },
-  {
-    title: "Người dùng",
-    icon: GroupIcon,
-    path: ROUTES.users.root,
   },
   {
     title: "Đơn hàng",

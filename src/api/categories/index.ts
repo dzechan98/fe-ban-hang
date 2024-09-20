@@ -72,7 +72,7 @@ export const useEditCategory = ({ queryKey }: Partial<QueryContext> = {}) => {
 
   return useMutation({
     mutationFn: async ({ id, input }: EditCategoryParams) => {
-      const { data } = await instance.patch<CategoryResponse>(
+      const { data } = await instance.put<CategoryResponse>(
         `${URL}/${id}`,
         input
       );
@@ -82,6 +82,23 @@ export const useEditCategory = ({ queryKey }: Partial<QueryContext> = {}) => {
     onSuccess: () => {
       if (queryKey) {
         queryClient.invalidateQueries({ queryKey });
+      }
+    },
+  });
+};
+
+export const useDeleteCategory = ({ queryKey }: Partial<QueryContext> = {}) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { data } = await instance.delete(`${URL}/${id}`);
+
+      return data;
+    },
+    onSuccess: async () => {
+      if (queryKey) {
+        await queryClient.invalidateQueries({ queryKey });
       }
     },
   });

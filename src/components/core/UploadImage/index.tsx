@@ -23,6 +23,7 @@ interface UploadImageProps {
   multiple?: boolean;
   reset?: boolean;
   initialImages?: string[];
+  length?: number;
 }
 
 export const UploadImage: React.FC<UploadImageProps> = ({
@@ -33,6 +34,7 @@ export const UploadImage: React.FC<UploadImageProps> = ({
   multiple = false,
   initialImages = [],
   reset = false,
+  length = 1,
 }) => {
   const [images, setImages] = useState<string[]>(initialImages);
   const [isUploading, setIsUploading] = useState(false);
@@ -181,11 +183,20 @@ export const UploadImage: React.FC<UploadImageProps> = ({
           }}
         >
           {images.map((image, index) => (
-            <Grid2 size={4} sx={{ position: "relative" }} key={index}>
+            <Grid2
+              size={!multiple ? 12 : 4}
+              sx={{ position: "relative" }}
+              key={index}
+            >
               <img
                 src={image}
                 alt={image}
-                style={{ width: "100%", height: 100, objectFit: "cover" }}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  height: !multiple ? "auto" : 100,
+                  objectFit: "cover",
+                }}
               />
               <IconButton
                 size="small"

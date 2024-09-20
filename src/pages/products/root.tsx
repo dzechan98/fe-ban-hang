@@ -12,7 +12,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { capitalizeWords } from "@utils/capitalizeWords";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import { useDisclosure } from "@hooks/useDisclosure";
 import { ROUTES } from "@router/constants";
 import { toast } from "react-toastify";
@@ -32,7 +31,10 @@ const getColumns = (
       headerName: "Tên sản phẩm",
       minWidth: 250,
       wrapText: true,
-      valueGetter: ({ data }) => data && capitalizeWords(data.title),
+      cellRenderer: ({ data }: ICellRendererParams<ProductResponse>) =>
+        data && (
+          <Typography fontSize="14px">{capitalizeWords(data.title)}</Typography>
+        ),
       cellStyle: styleCenter,
     },
     {
@@ -94,9 +96,6 @@ const getColumns = (
       cellRenderer: ({ data }: ICellRendererParams<ProductResponse>) =>
         data && (
           <Stack direction="row" gap={0.25}>
-            <IconButton color="info" size="small">
-              <RemoveRedEyeOutlinedIcon />
-            </IconButton>
             <IconButton
               color="success"
               size="small"

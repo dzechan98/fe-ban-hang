@@ -3,13 +3,17 @@ import { ROUTES } from "./constants";
 import {
   HomePage,
   LoginPage,
-  CategoryPage,
+  CategoriesPage,
   RegisterPage,
   UsersPage,
   ProductsPage,
   ProductDetailPage,
   CreateProductPage,
   EditProductPage,
+  CreateCategoryPage,
+  EditCategoryPage,
+  CreateUserPage,
+  EditUserPage,
 } from "../pages";
 import { DefaultLayout } from "@layouts/DefaultLayout";
 import { AdminLayout } from "@layouts/AdminLayout";
@@ -36,7 +40,17 @@ const useAppRouter = () => {
               children: [
                 {
                   path: ROUTES.categories.root,
-                  children: [{ index: true, element: <CategoryPage /> }],
+                  children: [
+                    { index: true, element: <CategoriesPage /> },
+                    {
+                      path: ROUTES.categories.new,
+                      element: <CreateCategoryPage />,
+                    },
+                    {
+                      path: ROUTES.categories.edit,
+                      element: <EditCategoryPage />,
+                    },
+                  ],
                 },
                 {
                   path: ROUTES.products.root,
@@ -52,7 +66,20 @@ const useAppRouter = () => {
                     },
                   ],
                 },
-                { path: ROUTES.dashboard, element: <UsersPage /> },
+                {
+                  path: ROUTES.users.root,
+                  children: [
+                    { index: true, element: <UsersPage /> },
+                    {
+                      path: ROUTES.users.new,
+                      element: <CreateUserPage />,
+                    },
+                    {
+                      path: ROUTES.users.edit,
+                      element: <EditUserPage />,
+                    },
+                  ],
+                },
               ],
             },
           ],

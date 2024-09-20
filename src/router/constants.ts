@@ -7,7 +7,9 @@ export const ROUTES = {
   profile: "/profile",
   productDetail: "/products/:id",
   users: {
-    root: "/users",
+    root: "/admin/users",
+    new: "/admin/users/new",
+    edit: "/admin/users/:id",
   },
   categories: {
     root: "/admin/categories",

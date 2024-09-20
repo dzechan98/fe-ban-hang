@@ -41,10 +41,11 @@ export const ListCategories = () => {
                 src={category.image_url}
                 alt={category.title}
                 style={{
-                  height: "80px",
-                  width: "100%",
+                  height: 84,
+                  width: 84,
                   objectFit: "cover",
                 }}
+                loading="lazy"
               />
               <Box minHeight="40px">
                 <Typography fontSize="14px" textAlign="center">

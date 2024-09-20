@@ -4,12 +4,11 @@ import {
   useAddProduct,
   useEditProduct,
   useGetProduct,
-} from "@api/products";
+} from "@api/users";
 import { RHFSelect, RHFTextField, UploadImage } from "@components/core";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Grid2, Stack } from "@mui/material";
 import { ROUTES } from "@router/constants";
-import { capitalizeWords } from "@utils/capitalizeWords";
 import { getError } from "@utils/getError";
 import { useEffect, useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -17,15 +16,8 @@ import { useMatch, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 
-const categoryOptions = (categories: CategoryResponse[]) => {
-  return categories.map((category) => ({
-    label: capitalizeWords(category.title),
-    value: category._id,
-  }));
-};
-
-export const ProductForm = () => {
-  const isAddMode = Boolean(useMatch(ROUTES.products.new));
+export const UserForm = () => {
+  const isAddMode = Boolean(useMatch(ROUTES.users.new));
   const { id } = useParams();
 
   const { data: product } = useGetProduct(id);
