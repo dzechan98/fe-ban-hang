@@ -7,7 +7,7 @@ import {
 } from "@api/products";
 import { RHFSelect, RHFTextField, UploadImage } from "@components/core";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Grid2, Stack } from "@mui/material";
+import { Box, Button, Grid2, Stack, Typography } from "@mui/material";
 import { ROUTES } from "@router/constants";
 import { capitalizeWords } from "@utils/capitalizeWords";
 import { getError } from "@utils/getError";
@@ -62,6 +62,9 @@ export const ProductForm = () => {
 
   const { control, handleSubmit, reset, setValue } = useForm<ProductInput>({
     resolver: yupResolver(productSchema),
+    defaultValues: {
+      images: [],
+    },
   });
 
   const onSubmit = handleSubmit(async (value) => {
@@ -188,38 +191,79 @@ export const ProductForm = () => {
               }}
             />
           </Grid2>
-          <Grid2 size={4}>
+          <Grid2 size={3}>
             <Controller
               name="image_thumbnail"
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <UploadImage
                   label="Hình ảnh đại diện"
-                  onChange={(files) => field.onChange(files[0])}
+                  onChange={(url) => field.onChange(url)}
+                  onRemove={(_url) => field.onChange("")}
                   error={!!error}
                   helperText={error?.message}
                   reset={resetImages}
-                  initialImages={
-                    product?.image_thumbnail ? [product.image_thumbnail] : []
-                  }
+                  initialImage={product?.image_thumbnail}
                 />
               )}
             />
           </Grid2>
-          <Grid2 size={8}>
+          <Grid2 size={9}>
             <Controller
               name="images"
               control={control}
               render={({ field, fieldState: { error } }) => (
-                <UploadImage
-                  label="Hình ảnh sản phẩm"
-                  onChange={(files) => field.onChange(files)}
-                  error={!!error}
-                  helperText={error?.message}
-                  multiple
-                  reset={resetImages}
-                  initialImages={product?.images ?? []}
-                />
+                <>
+                  <Typography
+                    variant="subtitle1"
+                    gutterBottom
+                    color={error ? "error" : "text"}
+                  >
+                    Danh sách ảnh
+                  </Typography>
+                  <Box
+                    border={1}
+                    borderColor={
+                      error
+                        ? "error.main"
+                        : field.value.length > 0
+                        ? "primary.main"
+                        : "text.main"
+                    }
+                    padding={2}
+                    sx={{
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Grid2 container spacing={2.5}>
+                      {[0, 1, 2, 3, 4, 5].map((i) => (
+                        <Grid2 size={12 / 5} key={i}>
+                          <UploadImage
+                            onChange={(url) =>
+                              field.onChange([...field.value, url])
+                            }
+                            onRemove={(url: string) =>
+                              field.onChange(
+                                field.value.filter(
+                                  (currentUrl) => currentUrl != url
+                                )
+                              )
+                            }
+                            error={!!error}
+                            helperText={error?.message}
+                            reset={resetImages}
+                            initialImage={product?.images[i]}
+                          />
+                        </Grid2>
+                      ))}
+                    </Grid2>
+                  </Box>
+                  {error?.message && (
+                    <Typography color="error" variant="caption">
+                      {error?.message}
+                    </Typography>
+                  )}
+                </>
               )}
             />
           </Grid2>

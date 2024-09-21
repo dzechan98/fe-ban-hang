@@ -1,38 +1,34 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { Box, Typography, Stack, CircularProgress } from "@mui/material";
 import {
-  Box,
-  Typography,
-  Stack,
-  CircularProgress,
-  IconButton,
-} from "@mui/material";
-import { AddPhotoAlternate as AddPhotoIcon } from "@mui/icons-material";
+  AddPhotoAlternate as AddPhotoIcon,
+  Close as CloseIcon,
+} from "@mui/icons-material";
 import { toast } from "react-toastify";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 interface UploadImageProps {
   label?: string;
-  onChange: (url: string) => void;
-  onRemove: (url: string) => void;
+  onChange: (urls: string[]) => void;
   error?: boolean;
   helperText?: string;
+  multiple?: boolean;
   reset?: boolean;
-  initialImage?: string;
+  initialImages?: string[];
   type?: "circle" | "rectangle";
 }
 
 export const UploadImage: React.FC<UploadImageProps> = ({
   label,
   onChange,
-  onRemove,
   error = false,
   helperText,
-  initialImage = "",
+  multiple = false,
+  initialImages = [],
   reset = false,
   type = "rectangle",
 }) => {
-  const [image, setImage] = useState<string>(initialImage);
+  const [images, setImages] = useState<string[]>(initialImages);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -55,8 +51,6 @@ export const UploadImage: React.FC<UploadImageProps> = ({
         throw new Error("Image upload failed");
       }
 
-      console.log(response);
-
       return response.data.data.display_url;
     } catch (error) {
       console.error("Error uploading image:", error);
@@ -67,21 +61,33 @@ export const UploadImage: React.FC<UploadImageProps> = ({
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const file = event.target.files?.[0];
+    const files = Array.from(event.target.files || []);
+    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
 
-    if (!file || !file.type.startsWith("image/")) {
-      toast.error("Vui lòng chỉ chọn một tập tin hình ảnh");
+    if (imageFiles.length === 0) {
+      toast.error("Vui lòng chỉ chọn các tập tin hình ảnh");
       return;
     }
 
     setIsUploading(true);
 
     try {
-      const url = await uploadImage(file);
-      setImage(url);
-      onChange(url);
+      const uploadedImages: string[] = [];
+
+      for (const file of imageFiles) {
+        const url = await uploadImage(file);
+        uploadedImages.push(url);
+      }
+
+      const result = multiple ? [...images, ...uploadedImages] : uploadedImages;
+
+      setImages(result);
+      onChange(result);
     } catch (error) {
-      toast.error("Không thể tải lên hình ảnh. Vui lòng thử lại.");
+      console.error("Error uploading images:", error);
+      toast.error(
+        "Không thể tải lên một hoặc nhiều hình ảnh. Vui lòng thử lại."
+      );
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {
@@ -90,12 +96,10 @@ export const UploadImage: React.FC<UploadImageProps> = ({
     }
   };
 
-  const handleRemoveImage = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.stopPropagation();
-    setImage("");
-    onRemove(image);
+  const removeImage = (index: number) => {
+    const newImages = images.filter((_, i) => index != i);
+    setImages(newImages);
+    onChange(newImages);
   };
 
   const handleButtonClick = () => {
@@ -106,7 +110,7 @@ export const UploadImage: React.FC<UploadImageProps> = ({
   };
 
   useEffect(() => {
-    setImage(initialImage);
+    setImages(initialImages);
   }, [reset]);
 
   return (
@@ -123,19 +127,18 @@ export const UploadImage: React.FC<UploadImageProps> = ({
       <Stack
         sx={{
           borderRadius: type === "circle" ? "50%" : 1,
-          borderWidth: "1px",
-          borderStyle: image ? "solid" : "dashed",
+          borderWidth: "2px",
+          borderStyle: images.length === 0 ? "dashed" : "solid",
           borderColor: error
             ? "error.main"
-            : image
+            : images.length > 0
             ? "primary.main"
             : "text.main",
           p: 1,
-          aspectRatio: "1/1",
-          objectFit: "cover",
+          width: 200,
+          height: 200,
           alignItems: "center",
           justifyContent: "center",
-          position: "relative",
           "&:hover": {
             borderColor: "primary.main",
           },
@@ -148,12 +151,13 @@ export const UploadImage: React.FC<UploadImageProps> = ({
           onChange={handleFileChange}
           accept="image/*"
           style={{
-            display: "none",
+            display: "none  ",
           }}
+          multiple={multiple}
         />
         <Stack alignItems="center" spacing={1} justifyContent="center">
           {isUploading && <CircularProgress />}
-          {!image && !isUploading && (
+          {images.length === 0 && !isUploading && (
             <Stack alignItems="center">
               <AddPhotoIcon
                 color={error ? "error" : "primary"}
@@ -165,11 +169,11 @@ export const UploadImage: React.FC<UploadImageProps> = ({
             </Stack>
           )}
         </Stack>
-        {image && (
-          <>
+        {images.length > 0 &&
+          images.map((image) => (
             <img
               src={image}
-              alt="Uploaded"
+              alt={image}
               style={{
                 display: "block",
                 width: "100%",
@@ -178,19 +182,7 @@ export const UploadImage: React.FC<UploadImageProps> = ({
                 borderRadius: type === "circle" ? "50%" : 2,
               }}
             />
-            <IconButton
-              sx={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                transform: "translate(50%,-50%)",
-              }}
-              onClick={handleRemoveImage}
-            >
-              <HighlightOffIcon />
-            </IconButton>
-          </>
-        )}
+          ))}
       </Stack>
       {label && error && helperText && (
         <Typography color="error" variant="caption">

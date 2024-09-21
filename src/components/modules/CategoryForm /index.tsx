@@ -99,14 +99,12 @@ export const CategoryForm = () => {
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <UploadImage
-                  label="Hình ảnh đại diện"
-                  onChange={(files) => field.onChange(files[0])}
+                  label="Hình ảnh"
+                  onChange={(file) => field.onChange(file)}
                   error={!!error}
                   helperText={error?.message}
                   reset={resetImages}
-                  initialImages={
-                    category?.image_url ? [category.image_url] : []
-                  }
+                  initialImage={category?.image_url}
                 />
               )}
             />
