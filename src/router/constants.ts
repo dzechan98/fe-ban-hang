@@ -4,8 +4,10 @@ export const ROUTES = {
   register: "/register",
   dashboard: "/admin/dashboard",
   forgotPassword: "/forgot-password",
-  profile: "/profile",
   productDetail: "/products/:id",
+  account: {
+    profile: "/account/profile",
+  },
   users: {
     root: "/admin/users",
     new: "/admin/users/new",

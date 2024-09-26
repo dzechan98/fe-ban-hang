@@ -1,10 +1,5 @@
-import {
-  ProductResponse,
-  useDeleteProduct,
-  useListProducts,
-} from "@api/products";
 import { ConfirmDialog, Page, RouterLink } from "@components/core";
-import { Button, IconButton, Stack, Typography } from "@mui/material";
+import { Avatar, Button, IconButton, Stack, Typography } from "@mui/material";
 import { ColDef, ICellRendererParams } from "ag-grid-community";
 import { Table } from "@components/core";
 import { useMemo, useState } from "react";
@@ -16,6 +11,7 @@ import { useDisclosure } from "@hooks/useDisclosure";
 import { ROUTES } from "@router/constants";
 import { toast } from "react-toastify";
 import { getError } from "@utils/getError";
+import { useDeleteUser, useListUsers, UserResponse } from "@api/users";
 
 const styleCenter = {
   display: "flex",
@@ -31,58 +27,34 @@ const getColumns = (
       headerName: "Tên tài khoản",
       minWidth: 250,
       wrapText: true,
-      cellRenderer: ({ data }: ICellRendererParams<ProductResponse>) =>
-        data && (
-          <Typography fontSize="14px">{capitalizeWords(data.title)}</Typography>
+      cellRenderer: ({ data }: ICellRendererParams<UserResponse>) =>
+        data?.name && (
+          <Typography fontSize="14px">{capitalizeWords(data.name)}</Typography>
         ),
       cellStyle: styleCenter,
     },
     {
-      headerName: "Danh mục",
-      maxWidth: 200,
+      headerName: "Email",
+      field: "email",
+      flex: 1,
       wrapText: true,
-      valueGetter: ({ data }) => data && capitalizeWords(data.category.title),
       cellStyle: styleCenter,
     },
     {
-      headerName: "Thumbnail",
+      headerName: "Avatar",
       autoHeight: true,
-      width: 160,
-      cellRenderer: ({ data }: ICellRendererParams<ProductResponse>) =>
+      width: 120,
+      cellRenderer: ({ data }: ICellRendererParams<UserResponse>) =>
         data && (
           <Stack alignItems="center" justifyContent="center" padding={1}>
-            <img
-              src={data.image_thumbnail}
-              alt={data.title}
-              style={{
-                display: "block",
-                width: 120,
-                height: 80,
-                objectFit: "cover",
-                borderRadius: "2px",
-              }}
-              loading="lazy"
-            />
+            <Avatar src={data.image} alt={data.name} />
           </Stack>
         ),
       cellStyle: styleCenter,
     },
     {
-      headerName: "Giá",
-      valueGetter: ({ data }) =>
-        data && `${data.price.toLocaleString("vi-VN")}đ`,
-      cellStyle: styleCenter,
-      flex: 1,
-    },
-    {
-      headerName: "Số lượng",
-      field: "quantity",
-      cellStyle: styleCenter,
-      flex: 1,
-    },
-    {
-      headerName: "Đã bán",
-      field: "sold",
+      headerName: "Số điện thoại",
+      field: "phone",
       cellStyle: styleCenter,
       flex: 1,
     },
@@ -93,7 +65,7 @@ const getColumns = (
       width: 140,
       suppressColumnsToolPanel: true,
       sortable: false,
-      cellRenderer: ({ data }: ICellRendererParams<ProductResponse>) =>
+      cellRenderer: ({ data }: ICellRendererParams<UserResponse>) =>
         data && (
           <Stack direction="row" gap={0.25}>
             <IconButton
@@ -114,7 +86,7 @@ const getColumns = (
         ),
       resizable: false,
     },
-  ] as ColDef<ProductResponse>[];
+  ] as ColDef<UserResponse>[];
 };
 
 export const UsersPage = () => {
@@ -123,24 +95,22 @@ export const UsersPage = () => {
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 5);
 
-  const deleteProductDisclosure = useDisclosure({});
+  const deleteDisclosure = useDisclosure({});
 
-  const { data, isLoading, isFetching } = useListProducts({ page, limit });
+  const { data, isLoading, isFetching } = useListUsers({ page, limit });
 
-  console.log({ data, isFetching, isLoading });
-
-  const [idProduct, setIdProduct] = useState("");
-  const deleteProductMutation = useDeleteProduct({
-    queryKey: ["listProducts", page, limit],
+  const [idUser, setIdUser] = useState("");
+  const deleteUserMutation = useDeleteUser({
+    queryKey: ["listUsers", page, limit],
   });
 
   const handleClickEdit = (id: string) => {
-    navigate(`${ROUTES.products.root}/${id}`);
+    navigate(`${ROUTES.users.root}/${id}`);
   };
 
   const handleClickDelete = (id: string) => {
-    setIdProduct(id);
-    deleteProductDisclosure.onOpen();
+    setIdUser(id);
+    deleteDisclosure.onOpen();
   };
 
   const columnDefs = useMemo(
@@ -150,9 +120,9 @@ export const UsersPage = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await deleteProductMutation.mutateAsync(idProduct);
-      setIdProduct("");
-      deleteProductDisclosure.onClose();
+      await deleteUserMutation.mutateAsync(idUser);
+      setIdUser("");
+      deleteDisclosure.onClose();
       toast.success("Xóa tài khoản thành công");
     } catch (error) {
       toast.error(getError(error));
@@ -160,8 +130,8 @@ export const UsersPage = () => {
   };
 
   const handleCloseDialog = () => {
-    setIdProduct("");
-    deleteProductDisclosure.onClose();
+    setIdUser("");
+    deleteDisclosure.onClose();
   };
 
   const totalPage = useMemo(() => {
@@ -196,7 +166,7 @@ export const UsersPage = () => {
       <ConfirmDialog
         title="Xác nhận xóa"
         description="Bạn có chắc chắn muốn xóa mục này không? Hành động này không thể hoàn tác."
-        open={deleteProductDisclosure.isOpen}
+        open={deleteDisclosure.isOpen}
         onClose={handleCloseDialog}
         onConfirm={handleConfirmDelete}
       />

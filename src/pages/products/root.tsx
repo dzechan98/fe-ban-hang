@@ -127,8 +127,6 @@ export const ProductsPage = () => {
 
   const { data, isLoading, isFetching } = useListProducts({ page, limit });
 
-  console.log({ data, isFetching, isLoading });
-
   const [idProduct, setIdProduct] = useState("");
   const deleteProductMutation = useDeleteProduct({
     queryKey: ["listProducts", page, limit],

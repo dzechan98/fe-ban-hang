@@ -24,9 +24,13 @@ export const ListProducts = ({
 
   useEffect(() => {
     if (data) {
-      setListProducts({
-        count: data.count,
-        results: [...(listProducts?.results || []), ...data.results],
+      setListProducts((prev) => {
+        if (prev && index === 1) return prev;
+
+        return {
+          count: data.count,
+          results: [...(listProducts?.results || []), ...data.results],
+        };
       });
     }
   }, [data]);

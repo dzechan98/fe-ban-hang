@@ -53,7 +53,7 @@ const listItems = [
 ];
 
 export const AdminLayout = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const location = useLocation();
 
   return (
@@ -119,6 +119,7 @@ export const AdminLayout = () => {
             sx={{
               margin: "10px 20px",
             }}
+            onClick={signOut}
           >
             Đăng xuất
           </Button>

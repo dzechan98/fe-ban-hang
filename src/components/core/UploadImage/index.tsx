@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import {
@@ -14,12 +15,13 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 interface UploadImageProps {
   label?: string;
   onChange: (url: string) => void;
-  onRemove: (url: string) => void;
+  onRemove: (index?: number) => void;
   error?: boolean;
   helperText?: string;
   reset?: boolean;
   initialImage?: string;
   type?: "circle" | "rectangle";
+  index?: number;
 }
 
 export const UploadImage: React.FC<UploadImageProps> = ({
@@ -31,6 +33,7 @@ export const UploadImage: React.FC<UploadImageProps> = ({
   initialImage = "",
   reset = false,
   type = "rectangle",
+  index,
 }) => {
   const [image, setImage] = useState<string>(initialImage);
   const [isUploading, setIsUploading] = useState(false);
@@ -54,8 +57,6 @@ export const UploadImage: React.FC<UploadImageProps> = ({
       if (response.status !== 200) {
         throw new Error("Image upload failed");
       }
-
-      console.log(response);
 
       return response.data.data.display_url;
     } catch (error) {
@@ -94,8 +95,8 @@ export const UploadImage: React.FC<UploadImageProps> = ({
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
+    onRemove(index);
     setImage("");
-    onRemove(image);
   };
 
   const handleButtonClick = () => {
@@ -165,7 +166,7 @@ export const UploadImage: React.FC<UploadImageProps> = ({
             </Stack>
           )}
         </Stack>
-        {image && (
+        {image && !isUploading && (
           <>
             <img
               src={image}

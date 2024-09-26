@@ -53,7 +53,7 @@ export const useListProducts = ({
   category?: string;
 }) => {
   return useQuery({
-    queryKey: ["listProducts", page, limit],
+    queryKey: ["listProducts", page, limit, id, category],
     queryFn: async () => {
       const { data } = await instance.get<ListResponse<ProductResponse>>(URL, {
         params: {

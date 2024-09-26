@@ -14,11 +14,13 @@ import {
   EditCategoryPage,
   CreateUserPage,
   EditUserPage,
+  ProfilePage,
 } from "../pages";
 import { DefaultLayout } from "@layouts/DefaultLayout";
 import { AdminLayout } from "@layouts/AdminLayout";
 import { PrivateRoute } from "@router/PrivateRoute.tsx";
 import { AuthProvider } from "@contexts/UserContext.tsx";
+import AccountLayout from "@layouts/AccoutLayout";
 
 const useAppRouter = () => {
   return createBrowserRouter([
@@ -30,6 +32,22 @@ const useAppRouter = () => {
           children: [
             { path: ROUTES.home, element: <HomePage /> },
             { path: ROUTES.productDetail, element: <ProductDetailPage /> },
+          ],
+        },
+        {
+          element: <PrivateRoute />,
+          children: [
+            {
+              element: <DefaultLayout />,
+              children: [
+                {
+                  element: <AccountLayout />,
+                  children: [
+                    { path: ROUTES.account.profile, element: <ProfilePage /> },
+                  ],
+                },
+              ],
+            },
           ],
         },
         {

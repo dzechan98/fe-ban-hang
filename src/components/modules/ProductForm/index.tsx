@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CategoryResponse, useListCategories } from "@api/categories";
 import {
   ProductInput,
@@ -199,7 +200,7 @@ export const ProductForm = () => {
                 <UploadImage
                   label="Hình ảnh đại diện"
                   onChange={(url) => field.onChange(url)}
-                  onRemove={(_url) => field.onChange("")}
+                  onRemove={(id) => field.onChange("")}
                   error={!!error}
                   helperText={error?.message}
                   reset={resetImages}
@@ -242,17 +243,17 @@ export const ProductForm = () => {
                             onChange={(url) =>
                               field.onChange([...field.value, url])
                             }
-                            onRemove={(url: string) =>
-                              field.onChange(
-                                field.value.filter(
-                                  (currentUrl) => currentUrl != url
-                                )
-                              )
-                            }
+                            onRemove={(id) => {
+                              const newArray = field.value.filter(
+                                (_, index) => id !== index
+                              );
+                              field.onChange(newArray);
+                            }}
                             error={!!error}
                             helperText={error?.message}
                             reset={resetImages}
                             initialImage={product?.images[i]}
+                            index={i}
                           />
                         </Grid2>
                       ))}

@@ -12,7 +12,7 @@ export const MenuAccount = () => {
   const { signOut } = useAuth();
 
   const handleProfile = () => {
-    navigate(ROUTES.profile);
+    navigate(ROUTES.account.profile);
   };
 
   return (

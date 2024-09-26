@@ -105,8 +105,6 @@ export const CategoriesPage = () => {
 
   const { data, isLoading, isFetching } = useListCategories({ page, limit });
 
-  console.log({ data, isFetching, isLoading });
-
   const [idCategory, setIdCategory] = useState("");
   const deleteCategoryMutation = useDeleteCategory({
     queryKey: ["listCategories", page, limit],

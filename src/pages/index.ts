@@ -5,3 +5,4 @@ export * from "./users";
 export * from "./categories";
 export * from "./products";
 export * from "./product-detail";
+export * from "./profile";
