@@ -13,11 +13,13 @@ import {
 } from "@mui/material";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
+import { ROUTES } from "@router/constants";
 
 const AccountLayout = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <Stack gap={2} direction="row">
@@ -53,6 +55,7 @@ const AccountLayout = () => {
                   background: "none",
                 },
               }}
+              onClick={() => navigate(ROUTES.account.editProfile)}
             >
               Sửa hồ sơ
             </Button>

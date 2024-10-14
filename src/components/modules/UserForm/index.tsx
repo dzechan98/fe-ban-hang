@@ -1,5 +1,5 @@
 import { useEditUser, UserInput } from "@api/users";
-import { RHFTextField, UploadImage } from "@components/core";
+import { RHFSelect, RHFTextField, UploadImage } from "@components/core";
 import { useAuth } from "@contexts/UserContext";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Grid2, Stack } from "@mui/material";
@@ -11,11 +11,28 @@ import { toast } from "react-toastify";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import * as yup from "yup";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
+
+const genderOptions = [
+  {
+    label: "Nam",
+    value: "Nam",
+  },
+  {
+    label: "Nữ",
+    value: "Nữ",
+  },
+  {
+    label: "Khác",
+    value: "Khác",
+  },
+];
 
 export const UserForm = () => {
   const { user } = useAuth();
   const editUserMutation = useEditUser();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const [resetImages, setResetImage] = useState(false);
 
@@ -23,10 +40,11 @@ export const UserForm = () => {
     () =>
       yup.object({
         name: yup.string().required(),
-        email: yup.string().required(),
         image: yup.string().required(),
         birthday: yup.string().required(),
-        phone: yup.string(),
+        gender: yup.string().required(),
+        address: yup.string().required(),
+        phone: yup.string().required(),
       }),
     []
   );
@@ -41,6 +59,7 @@ export const UserForm = () => {
         await editUserMutation.mutateAsync({ id: user._id, input: value });
         queryClient.invalidateQueries({ queryKey: ["me"] });
         toast.success("Cập nhật tài khoản thành công");
+        navigate(-1);
       } catch (error) {
         toast.error(getError(error));
       }
@@ -50,9 +69,10 @@ export const UserForm = () => {
   useEffect(() => {
     if (user) {
       setValue("name", user.name);
-      setValue("email", user.email);
       setValue("phone", user.phone);
       setValue("image", user.image);
+      setValue("address", user.address);
+      setValue("gender", user.gender);
       setValue("birthday", user.birthday);
       setResetImage(!resetImages);
     }
@@ -76,18 +96,6 @@ export const UserForm = () => {
           </Grid2>
           <Grid2 size={6}>
             <RHFTextField
-              label="Email"
-              controlProps={{
-                name: "email",
-                control,
-              }}
-              textFieldProps={{
-                fullWidth: true,
-              }}
-            />
-          </Grid2>
-          <Grid2 size={6}>
-            <RHFTextField
               label="Số điện thoại"
               controlProps={{
                 name: "phone",
@@ -96,6 +104,14 @@ export const UserForm = () => {
               textFieldProps={{
                 fullWidth: true,
               }}
+            />
+          </Grid2>
+          <Grid2 size={6}>
+            <RHFSelect
+              label="Giới tính"
+              name="gender"
+              control={control}
+              options={genderOptions}
             />
           </Grid2>
           <Grid2 size={6}>
@@ -119,7 +135,21 @@ export const UserForm = () => {
               )}
             />
           </Grid2>
-          <Grid2 size={3}>
+          <Grid2 size={12}>
+            <RHFTextField
+              label="Địa chỉ"
+              controlProps={{
+                name: "address",
+                control,
+              }}
+              textFieldProps={{
+                fullWidth: true,
+                multiline: true,
+                rows: 3,
+              }}
+            />
+          </Grid2>
+          <Grid2 size={2}>
             <Controller
               name="image"
               control={control}
@@ -138,8 +168,11 @@ export const UserForm = () => {
             />
           </Grid2>
         </Grid2>
-        <Stack direction="row" justifyContent="flex-end">
-          <Button type="submit" variant="outlined">
+        <Stack direction="row" justifyContent="flex-end" gap={2}>
+          <Button color="error" variant="outlined" onClick={() => navigate(-1)}>
+            Quay lại
+          </Button>
+          <Button type="submit" variant="contained">
             Lưu
           </Button>
         </Stack>

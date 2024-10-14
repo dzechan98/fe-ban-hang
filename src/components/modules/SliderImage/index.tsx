@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Box, Grid2, CardMedia, Stack } from "@mui/material";
+import { Box, Grid2, CardMedia, Stack, Backdrop } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { useDisclosure } from "@hooks/useDisclosure";
 
 interface SlideImageProps {
   images: string[];
@@ -19,6 +20,7 @@ const styleIcon = {
 };
 
 export const SlideImage = ({ images }: SlideImageProps) => {
+  const imageDisclosure = useDisclosure({});
   const [index, setIndex] = useState(0);
 
   const handleNext = () => {
@@ -36,10 +38,26 @@ export const SlideImage = ({ images }: SlideImageProps) => {
   return (
     <Box>
       <CardMedia
-        sx={{ height: 450 }}
+        sx={{ height: 450, cursor: "pointer" }}
         image={images[index]}
         title={images[index]}
+        onClick={imageDisclosure.onOpen}
       />
+      <Backdrop
+        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
+        open={imageDisclosure.isOpen}
+        onClick={imageDisclosure.onClose}
+      >
+        <img
+          src={images[index]}
+          alt={images[index]}
+          style={{
+            maxWidth: "100%",
+            maxHeight: "80vh",
+            objectFit: "contain",
+          }}
+        />
+      </Backdrop>
       <Box
         sx={{ display: "flex", alignItems: "center", position: "relative" }}
         marginTop={2}

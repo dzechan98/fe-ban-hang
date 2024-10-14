@@ -5,11 +5,11 @@ import { CategoryResponse } from "@api/categories";
 
 export interface ProductInput {
   title: string;
-  description: string;
+  description?: string;
   price: number;
   category: string;
   quantity: number;
-  color: string;
+  color?: string;
   image_thumbnail: string;
   images: string[];
 }
@@ -46,14 +46,18 @@ export const useListProducts = ({
   page = 1,
   limit = 100,
   category,
+  sortPrice,
+  title,
 }: {
   id?: string;
   page?: number;
   limit?: number;
   category?: string;
+  sortPrice?: string;
+  title?: string;
 }) => {
   return useQuery({
-    queryKey: ["listProducts", page, limit, id, category],
+    queryKey: ["listProducts", page, limit, id, category, sortPrice, title],
     queryFn: async () => {
       const { data } = await instance.get<ListResponse<ProductResponse>>(URL, {
         params: {
@@ -61,6 +65,8 @@ export const useListProducts = ({
           page,
           limit,
           category,
+          sortPrice,
+          title,
         },
       });
 

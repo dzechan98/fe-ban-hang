@@ -5,8 +5,10 @@ export const ROUTES = {
   dashboard: "/admin/dashboard",
   forgotPassword: "/forgot-password",
   productDetail: "/products/:id",
+  filterProduct: "/filter/:id",
   account: {
     profile: "/account/profile",
+    editProfile: "/account/profile/edit",
   },
   users: {
     root: "/admin/users",
@@ -23,5 +25,6 @@ export const ROUTES = {
     new: "/admin/products/new",
     edit: "/admin/products/:id",
   },
+  search: "/search",
   orders: "/orders",
 };

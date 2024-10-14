@@ -26,6 +26,8 @@ export const Product = ({
         cursor: "pointer",
         "&:hover": {
           borderColor: "primary.main",
+          transform: "translateY(-1px)",
+          transition: "all ease 0.3s",
         },
       }}
       onClick={() => navigate(`/products/${_id}`)}

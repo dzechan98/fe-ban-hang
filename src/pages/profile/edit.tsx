@@ -2,9 +2,9 @@ import { Page } from "@components/core";
 import { UserForm } from "@components/modules";
 import { Divider, Typography } from "@mui/material";
 
-export const ProfilePage = () => {
+export const EditProfilePage = () => {
   return (
-    <Page title="Hồ sơ của tôi">
+    <Page title="Chỉnh sửa hồ sơ">
       <Typography fontWeight="600" fontSize="18px">
         Hồ sơ của tôi
       </Typography>

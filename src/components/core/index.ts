@@ -14,3 +14,4 @@ export * from "./UploadImage";
 export * from "./Select";
 export * from "./Table";
 export * from "./ConfirmDialog";
+export * from "./MenuSort";

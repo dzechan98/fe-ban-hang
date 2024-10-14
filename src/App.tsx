@@ -10,6 +10,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import "react-toastify/dist/ReactToastify.css";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
+import "react-quill/dist/quill.snow.css";
 
 const queryClient = new QueryClient();
 

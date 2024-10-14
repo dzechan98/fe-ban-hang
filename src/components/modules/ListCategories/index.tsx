@@ -1,9 +1,11 @@
 import { useListCategories } from "@api/categories";
 import { Box, Typography, Grid2 } from "@mui/material";
 import { capitalizeWords } from "@utils/capitalizeWords";
+import { useNavigate } from "react-router-dom";
 
 export const ListCategories = () => {
   const { data } = useListCategories({});
+  const navigate = useNavigate();
 
   return (
     <Box sx={{ bgcolor: "white" }}>
@@ -36,6 +38,9 @@ export const ListCategories = () => {
                   transition: "0.3s ease all",
                 },
               }}
+              onClick={() =>
+                navigate(`/filter/${category.slug}.${category._id}`)
+              }
             >
               <img
                 src={category.image_url}

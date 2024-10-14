@@ -17,6 +17,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useMatch, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as yup from "yup";
+import ReactQuill from "react-quill";
 
 const categoryOptions = (categories: CategoryResponse[]) => {
   return categories.map((category) => ({
@@ -37,19 +38,20 @@ export const ProductForm = () => {
 
   const [resetImages, setResetImage] = useState(false);
   const navigate = useNavigate();
+  const [desc, setDesc] = useState("");
 
   const productSchema = useMemo(
     () =>
       yup.object({
         title: yup.string().required(),
-        description: yup.string().required(),
+        description: yup.string(),
         quantity: yup
           .number()
           .required()
           .min(0, "Số lượng của sản phẩm không thể âm"),
         price: yup.number().required().min(0, "Giá của sản phẩm không thể âm"),
         category: yup.string().required(),
-        color: yup.string().required(),
+        color: yup.string(),
         images: yup
           .array()
           .of(yup.string().required("URL hình ảnh không hợp lệ"))
@@ -70,10 +72,11 @@ export const ProductForm = () => {
 
   const onSubmit = handleSubmit(async (value) => {
     console.log(value);
+    const formatValues: ProductInput = { ...value, description: desc };
 
     if (!id) {
       try {
-        await addProductMutation.mutateAsync(value);
+        await addProductMutation.mutateAsync(formatValues);
         toast.success("Thêm sản phẩm thành công");
         reset({
           title: "",
@@ -85,6 +88,7 @@ export const ProductForm = () => {
           image_thumbnail: "",
           images: [],
         });
+        setDesc("");
         setResetImage(!resetImages);
       } catch (error) {
         toast.error(getError(error));
@@ -94,7 +98,7 @@ export const ProductForm = () => {
     }
 
     try {
-      await editProductMutation.mutateAsync({ id, input: value });
+      await editProductMutation.mutateAsync({ id, input: formatValues });
       toast.success("Cập nhật sản phẩm thành công");
       navigate(-1);
     } catch (error) {
@@ -105,7 +109,7 @@ export const ProductForm = () => {
   useEffect(() => {
     if (product) {
       setValue("title", product.title);
-      setValue("description", product.description);
+      setDesc(product.description as string);
       setValue("color", product.color);
       setValue("price", product.price);
       setValue("image_thumbnail", product.image_thumbnail);
@@ -114,7 +118,7 @@ export const ProductForm = () => {
       setValue("category", product.category._id);
       setResetImage(!resetImages);
     }
-  }, [product, setValue]);
+  }, [product]);
 
   return (
     <form onSubmit={onSubmit}>
@@ -179,18 +183,8 @@ export const ProductForm = () => {
             />
           </Grid2>
           <Grid2 size={12}>
-            <RHFTextField
-              label="Mô tả sản phẩm"
-              controlProps={{
-                name: "description",
-                control,
-              }}
-              textFieldProps={{
-                fullWidth: true,
-                multiline: true,
-                rows: 4,
-              }}
-            />
+            <Typography marginBottom={1}>Mô tả</Typography>
+            <ReactQuill theme="snow" value={desc} onChange={setDesc} />
           </Grid2>
           <Grid2 size={3}>
             <Controller

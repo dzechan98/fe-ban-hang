@@ -4,14 +4,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export interface UserInput {
   name: string;
-  email: string;
   birthday: string;
   image: string;
-  phone?: string;
+  gender: string;
+  address: string;
+  phone: string;
 }
 
 export interface UserResponse extends UserInput {
   _id: string;
+  email: string;
   isAdmin: boolean;
   createdAt: string;
   updatedAt: string;

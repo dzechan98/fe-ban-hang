@@ -15,6 +15,9 @@ import {
   CreateUserPage,
   EditUserPage,
   ProfilePage,
+  EditProfilePage,
+  FilterProductPage,
+  SearchPage,
 } from "../pages";
 import { DefaultLayout } from "@layouts/DefaultLayout";
 import { AdminLayout } from "@layouts/AdminLayout";
@@ -32,6 +35,8 @@ const useAppRouter = () => {
           children: [
             { path: ROUTES.home, element: <HomePage /> },
             { path: ROUTES.productDetail, element: <ProductDetailPage /> },
+            { path: ROUTES.filterProduct, element: <FilterProductPage /> },
+            { path: ROUTES.search, element: <SearchPage /> },
           ],
         },
         {
@@ -44,6 +49,10 @@ const useAppRouter = () => {
                   element: <AccountLayout />,
                   children: [
                     { path: ROUTES.account.profile, element: <ProfilePage /> },
+                    {
+                      path: ROUTES.account.editProfile,
+                      element: <EditProfilePage />,
+                    },
                   ],
                 },
               ],

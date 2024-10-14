@@ -1,6 +1,6 @@
 import { useGetProduct } from "@api/products";
 import { Page, Quantity, RouterLink } from "@components/core";
-import { Breadcrumbs, Button, Stack, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, Stack, Typography } from "@mui/material";
 import { ROUTES } from "@router/constants";
 import { capitalizeWords } from "@utils/capitalizeWords";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,6 +9,7 @@ import AddShoppingCartOutlinedIcon from "@mui/icons-material/AddShoppingCartOutl
 import { useState } from "react";
 import { useAuth } from "@contexts/UserContext";
 import { ListProducts, SlideImage } from "@components/modules";
+import Parser from "html-react-parser";
 
 export const ProductDetailPage = () => {
   const { id } = useParams();
@@ -109,6 +110,14 @@ export const ProductDetailPage = () => {
                 </Stack>
               </Stack>
             </Stack>
+            {data.description && (
+              <Stack bgcolor="white" padding={2} sx={{ borderRadius: "2px" }}>
+                <Box p={2} bgcolor="#f5f5f5" width="100%">
+                  <Typography>CHI TIẾT SẢN PHẨM</Typography>
+                </Box>
+                <Box p={2}>{Parser(data.description)}</Box>
+              </Stack>
+            )}
           </Stack>
           <Typography color="#777" marginY={2}>
             SẢN PHẨM LIÊN QUAN
