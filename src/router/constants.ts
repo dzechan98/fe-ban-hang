@@ -25,6 +25,7 @@ export const ROUTES = {
     new: "/admin/products/new",
     edit: "/admin/products/:id",
   },
+  cart: "/cart",
   search: "/search",
   orders: "/orders",
 };

@@ -67,11 +67,11 @@ export const ProductForm = () => {
     resolver: yupResolver(productSchema),
     defaultValues: {
       images: [],
+      quantity: 0,
     },
   });
 
   const onSubmit = handleSubmit(async (value) => {
-    console.log(value);
     const formatValues: ProductInput = { ...value, description: desc };
 
     if (!id) {
@@ -83,7 +83,6 @@ export const ProductForm = () => {
           description: "",
           color: "",
           price: undefined,
-          quantity: undefined,
           category: "",
           image_thumbnail: "",
           images: [],

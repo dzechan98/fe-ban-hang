@@ -1,5 +1,5 @@
 import { Page } from "@components/core";
-import { ListCategories, ListProducts } from "@components/modules";
+import { ListCategories, LoadMoreProduct } from "@components/modules";
 import { Box, Stack, Typography } from "@mui/material";
 
 export const HomePage = () => {
@@ -18,7 +18,7 @@ export const HomePage = () => {
             GỢI Ý CHO BẠN
           </Typography>
         </Box>
-        <ListProducts />
+        <LoadMoreProduct />
       </Stack>
     </Page>
   );

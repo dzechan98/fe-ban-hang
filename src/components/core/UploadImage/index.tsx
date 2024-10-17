@@ -14,8 +14,8 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 interface UploadImageProps {
   label?: string;
-  onChange: (url: string) => void;
-  onRemove: (index?: number) => void;
+  onChange?: (url: string) => void;
+  onRemove?: (index?: number) => void;
   error?: boolean;
   helperText?: string;
   reset?: boolean;
@@ -80,7 +80,7 @@ export const UploadImage: React.FC<UploadImageProps> = ({
     try {
       const url = await uploadImage(file);
       setImage(url);
-      onChange(url);
+      onChange?.(url);
     } catch (error) {
       toast.error("Không thể tải lên hình ảnh. Vui lòng thử lại.");
     } finally {
@@ -95,7 +95,7 @@ export const UploadImage: React.FC<UploadImageProps> = ({
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    onRemove(index);
+    onRemove?.(index);
     setImage("");
   };
 

@@ -21,16 +21,28 @@ import { MenuAccount } from "./MenuAccount";
 import React from "react";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
+import { useCart } from "@contexts/CartContext";
+import { CartPreview } from "@components/modules";
 
 export const Header = () => {
   const { user } = useAuth();
+  const { cart } = useCart();
   const authPopover = usePopover("auth");
+  const cartPopover = usePopover("cart");
 
   const handleClickAccount = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     if (user) {
       authPopover.handleOpen(e);
+    }
+  };
+
+  const handleShowPreviewCart = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    if (user) {
+      cartPopover.handleOpen(e);
     }
   };
 
@@ -99,10 +111,10 @@ export const Header = () => {
               <Box sx={{ flexGrow: 1, paddingX: 10 }}>
                 <Search />
               </Box>
-              <Box>
+              <Box onClick={handleShowPreviewCart}>
                 <Tooltip title="Giỏ hàng">
                   <IconButton>
-                    <Badge badgeContent="4" color="error">
+                    <Badge badgeContent={cart?.items.length ?? 0} color="error">
                       <ShoppingCartOutlinedIcon sx={{ color: "white" }} />
                     </Badge>
                   </IconButton>
@@ -125,6 +137,21 @@ export const Header = () => {
           }}
         >
           <MenuAccount />
+        </Popover>
+        <Popover
+          open={cartPopover.open}
+          anchorEl={cartPopover.anchorEl}
+          onClose={cartPopover.handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          <CartPreview onClosePopup={cartPopover.handleClose} />
         </Popover>
       </Container>
     </AppBar>

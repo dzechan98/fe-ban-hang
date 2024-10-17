@@ -41,8 +41,6 @@ export const CategoryForm = () => {
   });
 
   const onSubmit = handleSubmit(async (value) => {
-    console.log(value);
-
     if (!id) {
       try {
         await addCategoryMutation.mutateAsync(value);

@@ -28,17 +28,33 @@ export const Search = () => {
     }
   };
 
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
     <CustomSearch>
-      <Box sx={{ cursor: "pointer" }} onClick={handleSearch}>
+      <Box
+        sx={{
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        onClick={handleSearch}
+      >
         <SearchIcon />
       </Box>
-
       <InputBase
         sx={{ color: "inherit", width: "100%" }}
         placeholder="Tìm kiếm sản phẩm"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
     </CustomSearch>
   );

@@ -15,7 +15,7 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { useMemo, useState } from "react";
 import { useListProducts } from "@api/products";
-import { ListProducts1 } from "@components/modules";
+import { ListProducts } from "@components/modules";
 
 const getPathCategory = ({ _id, slug }: { _id: string; slug: string }) => {
   return `/filter/${slug}.${_id}`;
@@ -94,7 +94,7 @@ export const FilterProductPage = () => {
               setFilterPrice={setFilterPrice}
             />
 
-            <ListProducts1
+            <ListProducts
               page={page}
               setPage={setPage}
               isLoading={isLoading}

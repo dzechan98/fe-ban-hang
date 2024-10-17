@@ -70,7 +70,7 @@ const getColumns = (
     {
       headerName: "Giá",
       valueGetter: ({ data }) =>
-        data && `${data.price.toLocaleString("vi-VN")}đ`,
+        data && `₫${data.price.toLocaleString("vi-VN")}`,
       cellStyle: styleCenter,
       flex: 1,
     },

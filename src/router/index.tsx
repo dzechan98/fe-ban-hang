@@ -18,12 +18,14 @@ import {
   EditProfilePage,
   FilterProductPage,
   SearchPage,
+  CartPage,
 } from "../pages";
 import { DefaultLayout } from "@layouts/DefaultLayout";
 import { AdminLayout } from "@layouts/AdminLayout";
 import { PrivateRoute } from "@router/PrivateRoute.tsx";
 import { AuthProvider } from "@contexts/UserContext.tsx";
-import AccountLayout from "@layouts/AccoutLayout";
+import AccountLayout from "@layouts/AccountLayout";
+import { CartProvider } from "@contexts/CartContext";
 
 const useAppRouter = () => {
   return createBrowserRouter([
@@ -31,88 +33,97 @@ const useAppRouter = () => {
       element: <AuthProvider />,
       children: [
         {
-          element: <DefaultLayout />,
-          children: [
-            { path: ROUTES.home, element: <HomePage /> },
-            { path: ROUTES.productDetail, element: <ProductDetailPage /> },
-            { path: ROUTES.filterProduct, element: <FilterProductPage /> },
-            { path: ROUTES.search, element: <SearchPage /> },
-          ],
-        },
-        {
-          element: <PrivateRoute />,
+          element: <CartProvider />,
           children: [
             {
               element: <DefaultLayout />,
               children: [
-                {
-                  element: <AccountLayout />,
-                  children: [
-                    { path: ROUTES.account.profile, element: <ProfilePage /> },
-                    {
-                      path: ROUTES.account.editProfile,
-                      element: <EditProfilePage />,
-                    },
-                  ],
-                },
+                { path: ROUTES.home, element: <HomePage /> },
+                { path: ROUTES.productDetail, element: <ProductDetailPage /> },
+                { path: ROUTES.filterProduct, element: <FilterProductPage /> },
+                { path: ROUTES.search, element: <SearchPage /> },
               ],
             },
-          ],
-        },
-        {
-          element: <PrivateRoute adminRoute />,
-          children: [
             {
-              element: <AdminLayout />,
+              element: <PrivateRoute />,
               children: [
                 {
-                  path: ROUTES.categories.root,
+                  element: <DefaultLayout />,
                   children: [
-                    { index: true, element: <CategoriesPage /> },
                     {
-                      path: ROUTES.categories.new,
-                      element: <CreateCategoryPage />,
+                      element: <AccountLayout />,
+                      children: [
+                        {
+                          path: ROUTES.account.profile,
+                          element: <ProfilePage />,
+                        },
+                        {
+                          path: ROUTES.account.editProfile,
+                          element: <EditProfilePage />,
+                        },
+                      ],
                     },
-                    {
-                      path: ROUTES.categories.edit,
-                      element: <EditCategoryPage />,
-                    },
+                    { element: <CartPage />, path: ROUTES.cart },
                   ],
                 },
+              ],
+            },
+            {
+              element: <PrivateRoute adminRoute />,
+              children: [
                 {
-                  path: ROUTES.products.root,
+                  element: <AdminLayout />,
                   children: [
-                    { index: true, element: <ProductsPage /> },
                     {
-                      path: ROUTES.products.new,
-                      element: <CreateProductPage />,
+                      path: ROUTES.categories.root,
+                      children: [
+                        { index: true, element: <CategoriesPage /> },
+                        {
+                          path: ROUTES.categories.new,
+                          element: <CreateCategoryPage />,
+                        },
+                        {
+                          path: ROUTES.categories.edit,
+                          element: <EditCategoryPage />,
+                        },
+                      ],
                     },
                     {
-                      path: ROUTES.products.edit,
-                      element: <EditProductPage />,
+                      path: ROUTES.products.root,
+                      children: [
+                        { index: true, element: <ProductsPage /> },
+                        {
+                          path: ROUTES.products.new,
+                          element: <CreateProductPage />,
+                        },
+                        {
+                          path: ROUTES.products.edit,
+                          element: <EditProductPage />,
+                        },
+                      ],
                     },
-                  ],
-                },
-                {
-                  path: ROUTES.users.root,
-                  children: [
-                    { index: true, element: <UsersPage /> },
                     {
-                      path: ROUTES.users.new,
-                      element: <CreateUserPage />,
-                    },
-                    {
-                      path: ROUTES.users.edit,
-                      element: <EditUserPage />,
+                      path: ROUTES.users.root,
+                      children: [
+                        { index: true, element: <UsersPage /> },
+                        {
+                          path: ROUTES.users.new,
+                          element: <CreateUserPage />,
+                        },
+                        {
+                          path: ROUTES.users.edit,
+                          element: <EditUserPage />,
+                        },
+                      ],
                     },
                   ],
                 },
               ],
             },
+            { path: ROUTES.login, element: <LoginPage /> },
+            { path: ROUTES.register, element: <RegisterPage /> },
           ],
         },
-        { path: ROUTES.login, element: <LoginPage /> },
-        { path: ROUTES.register, element: <RegisterPage /> },
       ],
     },
   ]);

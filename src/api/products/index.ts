@@ -48,6 +48,7 @@ export const useListProducts = ({
   category,
   sortPrice,
   title,
+  listCategories,
 }: {
   id?: string;
   page?: number;
@@ -55,9 +56,19 @@ export const useListProducts = ({
   category?: string;
   sortPrice?: string;
   title?: string;
+  listCategories?: string;
 }) => {
   return useQuery({
-    queryKey: ["listProducts", page, limit, id, category, sortPrice, title],
+    queryKey: [
+      "listProducts",
+      page,
+      limit,
+      id,
+      category,
+      sortPrice,
+      title,
+      listCategories,
+    ],
     queryFn: async () => {
       const { data } = await instance.get<ListResponse<ProductResponse>>(URL, {
         params: {
@@ -67,11 +78,13 @@ export const useListProducts = ({
           category,
           sortPrice,
           title,
+          listCategories,
         },
       });
 
       return data;
     },
+    enabled: !!id || !!category || !sortPrice || !title || !listCategories,
   });
 };
 

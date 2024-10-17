@@ -11,7 +11,7 @@ import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import { useListCategories } from "@api/categories";
 import { capitalizeWords } from "@utils/capitalizeWords";
 import { useEffect, useState } from "react";
-import { ListProducts1 } from "@components/modules";
+import { ListProducts } from "@components/modules";
 import { useListProducts } from "@api/products";
 
 interface CheckboxOption extends Option {
@@ -31,6 +31,10 @@ export const SearchPage = () => {
     limit: 8,
     sortPrice: filterPrice?.value,
     title: searchParams.get("keyword") as string,
+    listCategories: listCategoriesSearch
+      ?.filter((i) => i.checked)
+      .map((i) => i.value)
+      .join(","),
   });
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,8 +46,6 @@ export const SearchPage = () => {
       )
     );
   };
-
-  console.log(listCategoriesSearch);
 
   useEffect(() => {
     if (listCategories) {
@@ -98,7 +100,7 @@ export const SearchPage = () => {
             '
           </Typography>
           <MenuSort filterPrice={filterPrice} setFilterPrice={setFilterPrice} />
-          <ListProducts1
+          <ListProducts
             page={page}
             setPage={setPage}
             isLoading={isLoading}

@@ -54,7 +54,7 @@ export const Product = ({
           alignItems="center"
         >
           <Typography color="primary" fontSize="14px">
-            {`${price.toLocaleString("vi-VN")}đ`}
+            {`₫${price.toLocaleString("vi-VN")}`}
           </Typography>
           <Typography fontSize="12px">{`Đã bán : ${sold}`}</Typography>
         </Stack>

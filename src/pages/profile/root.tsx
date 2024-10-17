@@ -4,6 +4,7 @@ import { useAuth } from "@contexts/UserContext";
 import { Button, Divider, Stack, Typography } from "@mui/material";
 import { ROUTES } from "@router/constants";
 import dayjs from "dayjs";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const infoUser = (user?: UserResponse | null) => {
@@ -50,16 +51,16 @@ export const ProfilePage = () => {
       <Divider />
       <Stack marginTop={2} gap={3}>
         {infoUser(user).map((item, index) => (
-          <>
+          <React.Fragment key={index}>
             {item.value && (
-              <Stack direction="row" gap={3} key={index}>
+              <Stack direction="row" gap={3}>
                 <Typography width={160} color="#555555cc" fontSize="14px">
                   {item.label}
                 </Typography>
                 <Typography fontSize="14px">{item.value}</Typography>
               </Stack>
             )}
-          </>
+          </React.Fragment>
         ))}
         <Stack direction="row" justifyContent="flex-end">
           <Button

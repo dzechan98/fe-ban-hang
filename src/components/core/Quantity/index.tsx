@@ -14,16 +14,25 @@ const styleBox = {
 
 interface QuantityProps {
   count: number;
-  setCount: React.Dispatch<React.SetStateAction<number>>;
+  setCount?: React.Dispatch<React.SetStateAction<number>>;
+  onIncrement?: () => void;
+  onDecrement?: () => void;
 }
 
-export const Quantity = ({ count, setCount }: QuantityProps) => {
+export const Quantity = ({
+  count,
+  setCount,
+  onDecrement,
+  onIncrement,
+}: QuantityProps) => {
   const handleIncrement = () => {
-    setCount((prev) => prev + 1);
+    setCount?.((prev) => prev + 1);
+    onIncrement?.();
   };
 
   const handleDecrement = () => {
-    setCount((prev) => (prev > 0 ? prev - 1 : 1));
+    setCount?.((prev) => (prev > 1 ? prev - 1 : 1));
+    onDecrement?.();
   };
 
   return (
@@ -40,7 +49,7 @@ export const Quantity = ({ count, setCount }: QuantityProps) => {
       <Box width={32} onClick={handleDecrement} sx={{ ...styleBox }}>
         <RemoveIcon fontSize="small" />
       </Box>
-      <Box minWidth={50} sx={{ ...styleBox, cursor: "default" }}>
+      <Box minWidth={50} sx={{ ...styleBox, cursor: "default" }} flexGrow={1}>
         {count}
       </Box>
       <Box width={32} onClick={handleIncrement} sx={{ ...styleBox }}>

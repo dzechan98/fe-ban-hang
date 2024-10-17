@@ -1,4 +1,4 @@
-import { useGetProduct } from "@api/products";
+import { useGetProduct, useListProducts } from "@api/products";
 import { Page, Quantity, RouterLink } from "@components/core";
 import { Box, Breadcrumbs, Button, Stack, Typography } from "@mui/material";
 import { ROUTES } from "@router/constants";
@@ -6,16 +6,27 @@ import { capitalizeWords } from "@utils/capitalizeWords";
 import { useNavigate, useParams } from "react-router-dom";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import AddShoppingCartOutlinedIcon from "@mui/icons-material/AddShoppingCartOutlined";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@contexts/UserContext";
 import { ListProducts, SlideImage } from "@components/modules";
 import Parser from "html-react-parser";
+import { useCart } from "@contexts/CartContext";
+import { ProductCart } from "@api/cart";
 
 export const ProductDetailPage = () => {
   const { id } = useParams();
   const { user } = useAuth();
+  const { addItemToCart } = useCart();
   const navigate = useNavigate();
   const { data, isLoading } = useGetProduct(id);
+
+  const { data: listProducts, isLoading: isLoadingListProducts } =
+    useListProducts({
+      page: 1,
+      limit: 4,
+      category: data?.category._id,
+      id: data?._id,
+    });
 
   const [count, setCount] = useState(1);
 
@@ -27,11 +38,24 @@ export const ProductDetailPage = () => {
   };
 
   const handleAddCart = () => {
-    if (user) {
+    if (user && data) {
+      const { _id, image_thumbnail, price, title } = data;
+      const product: ProductCart = {
+        productId: _id,
+        title,
+        image_thumbnail,
+        price,
+        quantity: count,
+      };
+      addItemToCart(product);
       return;
     }
     navigate(ROUTES.login);
   };
+
+  useEffect(() => {
+    setCount(1);
+  }, [data]);
 
   return (
     <>
@@ -42,7 +66,10 @@ export const ProductDetailPage = () => {
               <RouterLink to={ROUTES.home} fontSize="14px">
                 VStore
               </RouterLink>
-              <RouterLink to={ROUTES.home} fontSize="14px">
+              <RouterLink
+                to={`/filter/${data.category.slug}.${data.category._id}`}
+                fontSize="14px"
+              >
                 {capitalizeWords(data.category.title)}
               </RouterLink>
               <Typography fontSize="14px">
@@ -57,7 +84,7 @@ export const ProductDetailPage = () => {
               gap={2}
             >
               <Stack width={450}>
-                <SlideImage images={data.images} />
+                <SlideImage images={[data.image_thumbnail, ...data.images]} />
               </Stack>
               <Stack></Stack>
               <Stack flexGrow={1} gap={2}>
@@ -72,7 +99,7 @@ export const ProductDetailPage = () => {
                   <Typography
                     fontSize="24px"
                     color="primary"
-                  >{`${data.price.toLocaleString("vi-VN")}đ`}</Typography>
+                  >{`₫${data.price.toLocaleString("vi-VN")}`}</Typography>
                   <Typography
                     fontSize="14px"
                     color="#757575"
@@ -119,10 +146,11 @@ export const ProductDetailPage = () => {
               </Stack>
             )}
           </Stack>
-          <Typography color="#777" marginY={2}>
-            SẢN PHẨM LIÊN QUAN
-          </Typography>
-          <ListProducts category={data.category._id} id={data._id} />
+          <ListProducts
+            isLoading={isLoadingListProducts}
+            listProducts={listProducts}
+            title="SẢN PHẨM LIÊN QUAN"
+          />
         </Page>
       )}
       {isLoading && <Page title="Chi tiết sản phẩm">Loading...</Page>}
