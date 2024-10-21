@@ -19,6 +19,7 @@ import {
   FilterProductPage,
   SearchPage,
   CartPage,
+  CheckoutPage,
 } from "../pages";
 import { DefaultLayout } from "@layouts/DefaultLayout";
 import { AdminLayout } from "@layouts/AdminLayout";
@@ -64,6 +65,7 @@ const useAppRouter = () => {
                       ],
                     },
                     { element: <CartPage />, path: ROUTES.cart },
+                    { element: <CheckoutPage />, path: ROUTES.checkout },
                   ],
                 },
               ],

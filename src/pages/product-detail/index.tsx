@@ -23,7 +23,7 @@ export const ProductDetailPage = () => {
   const { data: listProducts, isLoading: isLoadingListProducts } =
     useListProducts({
       page: 1,
-      limit: 4,
+      limit: 6,
       category: data?.category._id,
       id: data?._id,
     });
@@ -39,10 +39,11 @@ export const ProductDetailPage = () => {
 
   const handleAddCart = () => {
     if (user && data) {
-      const { _id, image_thumbnail, price, title } = data;
+      const { _id, image_thumbnail, price, title, color } = data;
       const product: ProductCart = {
         productId: _id,
         title,
+        color,
         image_thumbnail,
         price,
         quantity: count,
@@ -150,6 +151,7 @@ export const ProductDetailPage = () => {
             isLoading={isLoadingListProducts}
             listProducts={listProducts}
             title="SẢN PHẨM LIÊN QUAN"
+            size={2}
           />
         </Page>
       )}

@@ -40,7 +40,7 @@ export const FilterProductPage = () => {
   const { data: listProducts, isLoading } = useListProducts({
     category: categoryId,
     page,
-    limit: 8,
+    limit: 10,
     sortPrice: filterPrice?.value,
   });
 
@@ -93,11 +93,12 @@ export const FilterProductPage = () => {
               filterPrice={filterPrice}
               setFilterPrice={setFilterPrice}
             />
-
             <ListProducts
               page={page}
               setPage={setPage}
               isLoading={isLoading}
+              size={12 / 5}
+              limit={10}
               listProducts={listProducts}
             />
           </Box>

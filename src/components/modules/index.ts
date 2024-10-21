@@ -8,3 +8,4 @@ export * from "./CategoryForm ";
 export * from "./UserForm";
 export * from "./ListProducts";
 export * from "./CartPreview";
+export * from "./Addresses";

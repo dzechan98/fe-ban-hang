@@ -11,6 +11,8 @@ interface ListProductsProps {
   page?: number;
   setPage?: React.Dispatch<React.SetStateAction<number>>;
   title?: string;
+  size?: number;
+  limit?: number;
 }
 
 export const ListProducts: React.FC<ListProductsProps> = ({
@@ -19,6 +21,8 @@ export const ListProducts: React.FC<ListProductsProps> = ({
   page,
   setPage,
   title,
+  size = 3,
+  limit = 8,
 }) => {
   const navigate = useNavigate();
   const handleChangePage = (
@@ -62,7 +66,7 @@ export const ListProducts: React.FC<ListProductsProps> = ({
         <>
           <Grid2 container spacing={0.75} width="100%">
             {listProducts.results.map((product) => (
-              <Grid2 size={3} key={product._id}>
+              <Grid2 size={size} key={product._id}>
                 <Product
                   _id={product._id}
                   title={product.title}
@@ -76,7 +80,7 @@ export const ListProducts: React.FC<ListProductsProps> = ({
           {page && (
             <Stack alignItems="center" marginTop={2}>
               <Pagination
-                count={Math.ceil(listProducts.count / 8)}
+                count={Math.ceil(listProducts.count / limit)}
                 variant="outlined"
                 shape="rounded"
                 color="primary"
@@ -88,9 +92,9 @@ export const ListProducts: React.FC<ListProductsProps> = ({
         </>
       )}
       {isLoading && (
-        <Grid2 size={3} container spacing={0.75} width="100%">
-          {Array.from(new Array(8)).map((_, index) => (
-            <Grid2 size={3} key={index}>
+        <Grid2 container spacing={0.75} width="100%">
+          {Array.from(new Array(limit)).map((_, index) => (
+            <Grid2 size={size} key={index}>
               <ProductLoading />
             </Grid2>
           ))}

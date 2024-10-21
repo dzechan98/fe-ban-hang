@@ -71,6 +71,7 @@ export const CartProvider = () => {
     try {
       await clearCart.mutateAsync();
     } catch (error) {
+      console.log(error);
       toast.error(getError(error));
     }
   };

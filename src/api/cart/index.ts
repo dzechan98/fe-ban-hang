@@ -4,6 +4,7 @@ import { QueryContext } from "@api/type";
 
 export interface ProductCart {
   productId: string;
+  color?: string;
   price: number;
   quantity: number;
   image_thumbnail: string;
@@ -13,8 +14,9 @@ export interface ProductCart {
 export interface CartInput {
   userId: string;
   items: ProductCart[];
-  totalPrice: number;
 }
+
+export type ProductSelected = ProductCart & { checked: boolean };
 
 export interface CartResponse extends CartInput {
   _id: string;
