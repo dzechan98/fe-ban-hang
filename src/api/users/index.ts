@@ -7,7 +7,6 @@ export interface UserInput {
   birthday: string;
   image: string;
   gender: string;
-  address: string;
   phone: string;
 }
 

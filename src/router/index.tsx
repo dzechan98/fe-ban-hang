@@ -20,6 +20,8 @@ import {
   SearchPage,
   CartPage,
   CheckoutPage,
+  PurchasePage,
+  OrderSuccessPage,
 } from "../pages";
 import { DefaultLayout } from "@layouts/DefaultLayout";
 import { AdminLayout } from "@layouts/AdminLayout";
@@ -62,10 +64,18 @@ const useAppRouter = () => {
                           path: ROUTES.account.editProfile,
                           element: <EditProfilePage />,
                         },
+                        {
+                          path: ROUTES.account.purchase,
+                          element: <PurchasePage />,
+                        },
                       ],
                     },
                     { element: <CartPage />, path: ROUTES.cart },
                     { element: <CheckoutPage />, path: ROUTES.checkout },
+                    {
+                      element: <OrderSuccessPage />,
+                      path: ROUTES.orderSuccess,
+                    },
                   ],
                 },
               ],

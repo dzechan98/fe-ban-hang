@@ -4,7 +4,7 @@ import { Divider, Typography } from "@mui/material";
 
 export const EditProfilePage = () => {
   return (
-    <Page title="Chỉnh sửa hồ sơ">
+    <Page title="Chỉnh sửa hồ sơ" bgcolor="white" p={3}>
       <Typography fontWeight="600" fontSize="18px">
         Hồ sơ của tôi
       </Typography>

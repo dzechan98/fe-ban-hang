@@ -29,10 +29,6 @@ const infoUser = (user?: UserResponse | null) => {
       label: "Giới tính",
       value: user?.gender,
     },
-    {
-      label: "Địa chỉ",
-      value: user?.address,
-    },
   ];
 };
 
@@ -41,7 +37,7 @@ export const ProfilePage = () => {
   const navigate = useNavigate();
 
   return (
-    <Page title="Hồ sơ của tôi">
+    <Page title="Hồ sơ của tôi" bgcolor="white" p={3}>
       <Typography fontWeight="600" fontSize="18px">
         Hồ sơ của tôi
       </Typography>

@@ -43,7 +43,6 @@ export const UserForm = () => {
         image: yup.string().required(),
         birthday: yup.string().required(),
         gender: yup.string().required(),
-        address: yup.string().required(),
         phone: yup.string().required(),
       }),
     []
@@ -71,7 +70,6 @@ export const UserForm = () => {
       setValue("name", user.name);
       setValue("phone", user.phone);
       setValue("image", user.image);
-      setValue("address", user.address);
       setValue("gender", user.gender);
       setValue("birthday", user.birthday);
       setResetImage(!resetImages);
@@ -133,20 +131,6 @@ export const UserForm = () => {
                   }}
                 />
               )}
-            />
-          </Grid2>
-          <Grid2 size={12}>
-            <RHFTextField
-              label="Địa chỉ"
-              controlProps={{
-                name: "address",
-                control,
-              }}
-              textFieldProps={{
-                fullWidth: true,
-                multiline: true,
-                rows: 3,
-              }}
             />
           </Grid2>
           <Grid2 size={2}>

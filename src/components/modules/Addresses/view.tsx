@@ -90,6 +90,9 @@ export const View: React.FC<ViewProps> = ({
           </Box>
         ))}
         <Button
+          sx={{
+            width: "200px",
+          }}
           color="inherit"
           variant="outlined"
           startIcon={<AddIcon />}

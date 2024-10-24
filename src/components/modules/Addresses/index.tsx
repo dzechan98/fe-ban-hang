@@ -62,7 +62,6 @@ export const Addresses: React.FC<AddressesProps> = ({
             onTypeView={handleTypeView}
           />
         );
-
       default:
         return (
           <View

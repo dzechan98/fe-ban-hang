@@ -9,6 +9,7 @@ export const ROUTES = {
   account: {
     profile: "/account/profile",
     editProfile: "/account/profile/edit",
+    purchase: "/account/purchase",
   },
   users: {
     root: "/admin/users",
@@ -28,5 +29,5 @@ export const ROUTES = {
   cart: "/cart",
   checkout: "/checkout",
   search: "/search",
-  orders: "/orders",
+  orderSuccess: "/order/success",
 };

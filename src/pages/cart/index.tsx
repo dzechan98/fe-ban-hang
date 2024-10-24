@@ -47,7 +47,6 @@ export const CartPage = () => {
   );
 
   const isAllSelected = useMemo(() => {
-    console.log(1);
     return (
       selectedProducts.filter((product) => product.checked).length ===
       cart?.items.length

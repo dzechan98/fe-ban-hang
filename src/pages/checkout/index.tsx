@@ -4,19 +4,27 @@ import {
   Button,
   Dialog,
   Divider,
+  FormControlLabel,
   Grid2,
+  Radio,
   Stack,
   styled,
   Typography,
 } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ProductSelected } from "@api/cart";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { Addresses } from "@components/modules";
 import { usePopover } from "@hooks/usePopover";
 import { AddressResponse, useAddressDefault } from "@api/address";
+import dayjs from "dayjs";
+import { OrderInput, useCreateOrder } from "@api/order";
+import { toast } from "react-toastify";
+import { getError } from "@utils/getError";
+import CircularProgress from "@mui/material/CircularProgress";
+import { ROUTES } from "@router/constants";
 
 const StyledBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
@@ -37,26 +45,93 @@ const shippingOptions: ShippingOption[] = [
   { id: "3", name: "Viettel Post", fee: 40000, deliveryTime: "2-4" },
 ];
 
+const paymentOptions = [
+  {
+    id: "1",
+    name: "Thanh toán khi nhận hàng",
+    value: "cash_on_delivery",
+  },
+  {
+    id: "2",
+    name: "Chuyển khoản",
+    value: "bank_transfer",
+  },
+];
+
 const columns = [
   { title: "Đơn Giá", size: 2, textEnd: false },
   { title: "Số Lượng", size: 1.5, textEnd: true },
   { title: "Thành tiền", size: 2, textEnd: true },
 ];
 
+const formattedDate = (deliveryTime: string) => {
+  const [p1, p2] = deliveryTime.split("-").map(Number);
+  const today = dayjs();
+  const date1 = today.add(p1, "day");
+  const date2 = today.add(p2, "day");
+
+  const formattedDate1 = date1.format("DD [tháng] MM");
+  const formattedDate2 = date2.format("DD [tháng] MM");
+
+  return `${formattedDate1} - ${formattedDate2}`;
+};
+
 export const CheckoutPage = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const products: ProductSelected[] = location.state?.products || [];
+  const createOrderMutation = useCreateOrder({ queryKey: ["cart"] });
   const { data } = useAddressDefault();
   const addressesPopover = usePopover("addresses");
+
+  const totalPrice = useMemo(() => {
+    return products.reduce((occ, cur) => occ + cur.price * cur.quantity, 0);
+  }, []);
+
+  const [shippingMethod, setShippingMethod] = useState(shippingOptions[0]);
+  const [loading, setLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState(paymentOptions[0]);
+
   const [address, setAddress] = useState<AddressResponse>(
     {} as AddressResponse
   );
+
+  const handleCreateOrder = async (event: React.MouseEvent<HTMLElement>) => {
+    if (!address._id) {
+      addressesPopover.handleOpen(event);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const newOrder: OrderInput = {
+        items: products.map(({ checked: _, ...product }) => product),
+        shippingAddress: address,
+        totalPrice: totalPrice + shippingMethod.fee,
+        paymentMethod: paymentMethod.value,
+      };
+
+      const res = await createOrderMutation.mutateAsync(newOrder);
+      navigate(ROUTES.orderSuccess, {
+        state: {
+          id: res._id,
+          timeShipping: shippingMethod.deliveryTime,
+        },
+      });
+    } catch (error) {
+      toast.error(getError(error));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (address) {
       setAddress(address);
     }
   }, [address]);
+
+  console.log(address);
 
   useEffect(() => {
     if (data) {
@@ -66,36 +141,38 @@ export const CheckoutPage = () => {
 
   return (
     <Page title="Thanh toán">
-      <StyledBox>
-        <Stack direction="row" alignItems="center" gap={0.25} mb={1}>
-          <LocationOnIcon color="primary" />
-          <Typography color="primary" fontSize="18px">
-            Địa chỉ nhận hàng
-          </Typography>
-        </Stack>
-        <Stack direction="row" alignItems="center" gap={2}>
-          <Typography fontWeight="bold">{`${address?.name} ${address?.phone}`}</Typography>
-          <Typography>{`${address?.street}, ${address?.ward}, ${address?.district}, ${address?.city}`}</Typography>
-          {address?.isDefault && (
-            <Button
-              variant="outlined"
-              size="small"
-              sx={{
-                width: 50,
-                height: 20,
-                fontSize: "10px",
-                p: 0,
-                borderRadius: "2px",
-              }}
-            >
-              Mặc định
+      {address._id && (
+        <StyledBox>
+          <Stack direction="row" alignItems="center" gap={0.25} mb={1}>
+            <LocationOnIcon color="primary" />
+            <Typography color="primary" fontSize="18px">
+              Địa chỉ nhận hàng
+            </Typography>
+          </Stack>
+          <Stack direction="row" alignItems="center" gap={2}>
+            <Typography fontWeight="bold">{`${address?.name} ${address?.phone}`}</Typography>
+            <Typography>{`${address?.street}, ${address?.ward}, ${address?.district}, ${address?.city}`}</Typography>
+            {address?.isDefault && (
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{
+                  width: 50,
+                  height: 20,
+                  fontSize: "10px",
+                  p: 0,
+                  borderRadius: "2px",
+                }}
+              >
+                Mặc định
+              </Button>
+            )}
+            <Button size="small" onClick={addressesPopover.handleOpen}>
+              Thay đổi
             </Button>
-          )}
-          <Button size="small" onClick={addressesPopover.handleOpen}>
-            Thay đổi
-          </Button>
-        </Stack>
-      </StyledBox>
+          </Stack>
+        </StyledBox>
+      )}
       <StyledBox>
         <Grid2 container spacing={3} alignItems="center">
           <Grid2 size={6.5}>
@@ -144,7 +221,7 @@ export const CheckoutPage = () => {
                       {product.title}
                     </Typography>
                     {product.color && (
-                      <Typography fontSize="14px">
+                      <Typography variant="body2" color="text.secondary">
                         Màu: {product.color}
                       </Typography>
                     )}
@@ -176,54 +253,59 @@ export const CheckoutPage = () => {
           ))}
         </Grid2>
       </StyledBox>
-      <Box bgcolor="white">
-        <Stack direction="row" alignItems="center" gap={2} px={2} py={4}>
-          <Typography fontSize="18px">Đơn vị vận chuyển</Typography>
-          {shippingOptions.map((shipping) => (
-            <Button
-              key={shipping.id}
-              color="primary"
-              variant="outlined"
-              sx={{
-                height: "40px",
-              }}
-            >
-              {shipping.name}
-            </Button>
-          ))}
-        </Stack>
-        <Divider />
-        <Stack direction="row" alignItems="center" gap={6} px={2} py={4}>
-          <Typography variant="body2">Viettel Post</Typography>
-          <Typography variant="body2">Phí vận chuyển: ₫0 VNĐ</Typography>
-          <Stack direction="row" alignItems="center" gap={0.5}>
-            <LocalShippingIcon color="success" />
-            <Typography variant="body2" color="success">
-              Đảm bảo nhận hàng từ 23 tháng 10 - 25 tháng 10
-            </Typography>
+      <Box bgcolor="white" mb={2}>
+        <Box px={2} py={4}>
+          <Stack direction="row" alignItems="center" gap={4}>
+            <Typography fontSize="18px">Đơn vị vận chuyển</Typography>
+            <Stack direction="row" alignItems="center" gap={2}>
+              {shippingOptions.map((shipping) => (
+                <FormControlLabel
+                  key={shipping.id}
+                  control={
+                    <Radio
+                      size="small"
+                      checked={shipping === shippingMethod}
+                      onChange={() => setShippingMethod(shipping)}
+                    />
+                  }
+                  label={shipping.name}
+                />
+              ))}
+            </Stack>
           </Stack>
-        </Stack>
+          <Stack direction="row" alignItems="center" gap={4}>
+            <Typography variant="body2">{shippingMethod.name}</Typography>
+            <Typography variant="body2">
+              Phí vận chuyển: ₫{shippingMethod.fee.toLocaleString("vi-VN")}
+            </Typography>
+            <Stack direction="row" alignItems="center" gap={0.5}>
+              <LocalShippingIcon color="primary" />
+              <Typography variant="body2" color="primary">
+                Đảm bảo nhận hàng từ{" "}
+                {formattedDate(shippingMethod.deliveryTime)}
+              </Typography>
+            </Stack>
+          </Stack>
+        </Box>
         <Divider />
         <Stack direction="row" alignItems="center" gap={2} px={2} py={4}>
           <Typography fontSize="18px">Phương thức thanh toán</Typography>
-          {shippingOptions.map((shipping) => (
-            <Button
-              key={shipping.id}
-              color="primary"
-              variant="outlined"
-              sx={{
-                height: "40px",
-              }}
-            >
-              {shipping.name}
-            </Button>
+          {paymentOptions.map((payment) => (
+            <FormControlLabel
+              key={payment.id}
+              control={
+                <Radio
+                  size="small"
+                  checked={paymentMethod === payment}
+                  onChange={() => setPaymentMethod(payment)}
+                />
+              }
+              label={payment.name}
+            />
           ))}
         </Stack>
-        <Divider />
-        <Stack direction="row" alignItems="center" gap={6} px={2} py={4}>
-          <Typography variant="body2">Thanh toán khi nhận hàng</Typography>
-        </Stack>
-        <Divider />
+      </Box>
+      <Box bgcolor="white">
         <Stack alignItems="flex-end" gap={2} px={2} py={4}>
           <Stack
             direction="row"
@@ -235,7 +317,7 @@ export const CheckoutPage = () => {
               Tổng tiền hàng
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              đ41800
+              ₫{totalPrice.toLocaleString("vi-VN")}
             </Typography>
           </Stack>
           <Stack
@@ -248,7 +330,7 @@ export const CheckoutPage = () => {
               Phí vận chuyển
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              15555
+              ₫{shippingMethod.fee.toLocaleString("vi-VN")}
             </Typography>
           </Stack>
           <Stack
@@ -261,7 +343,7 @@ export const CheckoutPage = () => {
               Tổng thanh toán
             </Typography>
             <Typography color="primary" fontSize="24px">
-              616đ
+              ₫{(totalPrice + shippingMethod.fee).toLocaleString("vi-VN")}
             </Typography>
           </Stack>
         </Stack>
@@ -273,9 +355,10 @@ export const CheckoutPage = () => {
           gap={6}
           px={2}
           py={4}
+          color="white"
         >
           <Stack direction="row" gap={0.5}>
-            <Typography variant="body2">
+            <Typography variant="body2" color="text.secondary">
               Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo
             </Typography>
             <Typography variant="body2" color="primary">
@@ -287,8 +370,13 @@ export const CheckoutPage = () => {
             sx={{
               width: 240,
             }}
+            onClick={handleCreateOrder}
           >
-            Đặt hàng
+            {loading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "Đặt hàng"
+            )}
           </Button>
         </Stack>
       </Box>

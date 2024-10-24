@@ -89,7 +89,7 @@ const AccountLayout = () => {
           </MenuItem>
         </MenuList>
       </Box>
-      <Box bgcolor="white" flexGrow={1} p={3}>
+      <Box flexGrow={1}>
         <Outlet />
       </Box>
     </Stack>

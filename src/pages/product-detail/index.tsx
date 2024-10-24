@@ -12,6 +12,7 @@ import { ListProducts, SlideImage } from "@components/modules";
 import Parser from "html-react-parser";
 import { useCart } from "@contexts/CartContext";
 import { ProductCart } from "@api/cart";
+import { toast } from "react-toastify";
 
 export const ProductDetailPage = () => {
   const { id } = useParams();
@@ -31,9 +32,30 @@ export const ProductDetailPage = () => {
   const [count, setCount] = useState(1);
 
   const handleBuyNow = () => {
-    if (user) {
+    if (user && data) {
+      if (data.quantity - data.sold >= count) {
+        const { _id, image_thumbnail, price, title, color } = data;
+        const product = {
+          productId: _id,
+          title,
+          color,
+          image_thumbnail,
+          price,
+          quantity: count,
+          checked: true,
+        };
+
+        navigate(ROUTES.checkout, {
+          state: {
+            products: [product],
+          },
+        });
+      } else {
+        toast.error("Số lượng sản phẩm không đủ");
+      }
       return;
     }
+
     navigate(ROUTES.login);
   };
 
@@ -103,19 +125,27 @@ export const ProductDetailPage = () => {
                   >{`₫${data.price.toLocaleString("vi-VN")}`}</Typography>
                   <Typography
                     fontSize="14px"
-                    color="#757575"
+                    color="text.secondary"
                   >{`${data.sold} đã bán`}</Typography>
                 </Stack>
                 <Stack direction="row" alignItems="center" gap={2}>
-                  <Typography color="#757575" fontSize="14px" minWidth="100px">
+                  <Typography
+                    color="text.secondary"
+                    fontSize="14px"
+                    minWidth="100px"
+                  >
                     Số lượng
                   </Typography>
                   <Quantity count={count} setCount={setCount} />
-                  <Typography
-                    color="#757575"
-                    fontSize="14px"
-                  >{`${data.quantity} sản phẩm có sẵn`}</Typography>
+                  <Typography color="text.secondary" fontSize="14px">{`${
+                    data.quantity - data.sold
+                  } sản phẩm có sẵn`}</Typography>
                 </Stack>
+                {data.color && (
+                  <Typography variant="body2" color="text.secondary">
+                    Màu: {data.color}
+                  </Typography>
+                )}
                 <Stack direction="row" gap={2}>
                   <Button
                     startIcon={<AddShoppingCartOutlinedIcon />}

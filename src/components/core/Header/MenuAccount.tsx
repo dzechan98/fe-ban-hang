@@ -15,6 +15,10 @@ export const MenuAccount = () => {
     navigate(ROUTES.account.profile);
   };
 
+  const handlePurchase = () => {
+    navigate(ROUTES.account.purchase);
+  };
+
   return (
     <MenuList>
       <MenuItem onClick={handleProfile}>
@@ -23,7 +27,7 @@ export const MenuAccount = () => {
         </ListItemIcon>
         <Typography>{capitalizeWords("Tài khoản của tôi")}</Typography>
       </MenuItem>
-      <MenuItem onClick={handleProfile}>
+      <MenuItem onClick={handlePurchase}>
         <ListItemIcon>
           <ShoppingBagOutlinedIcon fontSize="small" />
         </ListItemIcon>

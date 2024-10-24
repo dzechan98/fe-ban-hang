@@ -8,7 +8,7 @@ export const theme = createTheme({
           textTransform: "none",
         },
         sizeMedium: {
-          height: "48px",
+          height: "40px",
         },
         sizeLarge: {
           height: "56px",
