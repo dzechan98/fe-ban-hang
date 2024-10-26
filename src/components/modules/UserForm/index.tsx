@@ -141,7 +141,7 @@ export const UserForm = () => {
                 <UploadImage
                   label="Hình ảnh đại diện"
                   onChange={(url) => field.onChange(url)}
-                  onRemove={(id) => field.onChange("")}
+                  onRemove={() => field.onChange("")}
                   error={!!error}
                   helperText={error?.message}
                   type="circle"

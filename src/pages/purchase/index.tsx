@@ -1,8 +1,10 @@
-import { Status, useOrdersByMe } from "@api/order";
-import { Page } from "@components/core";
+import { Status, useCancelOrder, useOrdersByMe } from "@api/order";
+import { ConfirmDialog, Page } from "@components/core";
 import { useAuth } from "@contexts/UserContext";
+import { useDisclosure } from "@hooks/useDisclosure";
 import {
   Box,
+  Button,
   Chip,
   ChipProps,
   Divider,
@@ -11,6 +13,9 @@ import {
   styled,
   Typography,
 } from "@mui/material";
+import { getError } from "@utils/getError";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 const StyledBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
@@ -27,15 +32,20 @@ const mappingStatusOrder = (
         color: "primary",
         label: "Chờ duyệt",
       };
-    case "success":
+    case "shipped":
       return {
-        color: "success",
-        label: "Hoàn thành",
+        color: "secondary",
+        label: "Đang vận chuyển",
       };
-    case "cancel":
+    case "canceled":
       return {
         color: "error",
         label: "Đã hủy",
+      };
+    case "delivered":
+      return {
+        color: "success",
+        label: "Đã giao",
       };
     default:
       return {
@@ -48,13 +58,48 @@ const mappingStatusOrder = (
 export const PurchasePage = () => {
   const { user } = useAuth();
   const { data } = useOrdersByMe(user?._id);
+  const cancelOrderMutation = useCancelOrder({
+    queryKey: ["orders", user?._id],
+  });
 
-  console.log(data);
+  const cancelOrderDisclosure = useDisclosure({});
+  const [orderId, setOrderId] = useState("");
+
+  const handleConfirmCancelOrder = async () => {
+    try {
+      await cancelOrderMutation.mutateAsync(orderId);
+      toast.success("Hủy đơn hàng thành công");
+    } catch (error) {
+      toast.error(getError(error));
+    } finally {
+      setOrderId("");
+      cancelOrderDisclosure.onClose();
+    }
+  };
+
+  const handleOpenDialog = (orderId: string) => {
+    setOrderId(orderId);
+    cancelOrderDisclosure.onOpen();
+  };
+
+  const handleCloseDialog = () => {
+    setOrderId("");
+    cancelOrderDisclosure.onClose();
+  };
+
   return (
     <Page title="VStore">
       {data &&
         data.map((order) => (
           <StyledBox key={order._id}>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography>Mã đơn hàng: #{order._id}</Typography>
+              <Chip {...mappingStatusOrder(order.status as Status)} />
+            </Stack>
             {order.items.map((product) => (
               <Grid2
                 container
@@ -110,9 +155,26 @@ export const PurchasePage = () => {
               </Grid2>
             ))}
             <Divider />
-            <Stack direction="row" justifyContent="space-between" pt={2}>
-              <Chip {...mappingStatusOrder(order.status as Status)} />
-              <Typography variant="body2">
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              pt={2}
+              color="white"
+            >
+              {["canceled", "shipped", "delivered"].includes(
+                order.status as string
+              ) && (
+                <Button
+                  color="error"
+                  size="small"
+                  variant="contained"
+                  onClick={() => handleOpenDialog(order._id)}
+                >
+                  Hủy
+                </Button>
+              )}
+              <Typography variant="body2" textAlign="end" width="100%">
                 Thành tiền:{" "}
                 <Typography
                   component="span"
@@ -126,6 +188,13 @@ export const PurchasePage = () => {
             </Stack>
           </StyledBox>
         ))}
+      <ConfirmDialog
+        title="Xác nhận hủy đơn hàng"
+        description="Bạn có chắc chắn muốn hủy đơn hàng này không? Hành động này không thể hoàn tác."
+        open={cancelOrderDisclosure.isOpen}
+        onClose={handleCloseDialog}
+        onConfirm={handleConfirmCancelOrder}
+      />
     </Page>
   );
 };

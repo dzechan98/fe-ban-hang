@@ -1,10 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import instance from "../instance";
-import { QueryContext } from "@api/type";
+import { ListResponse, QueryContext } from "@api/type";
 import { ProductCart } from "@api/cart";
 import { AddressResponse } from "@api/address";
+import { UserResponse } from "@api/users";
 
-export type Status = "pending" | "success" | "cancel";
+export type Status = "pending" | "shipped" | "delivered" | "canceled";
+
 export interface OrderInput {
   items: ProductCart[];
   totalPrice: number;
@@ -17,7 +19,7 @@ export interface OrderInput {
 export interface OrderResponse extends OrderInput {
   _id: string;
   orderDate: string;
-  userId: string;
+  user: UserResponse;
   shippedDate: string;
   deliveredDate: string;
   canceledDate: string;
@@ -25,9 +27,9 @@ export interface OrderResponse extends OrderInput {
   updateAt: string;
 }
 
-export interface EditAddressParams {
-  id: string;
-  input: Partial<OrderInput>;
+export interface UpdateStatusOrderParams {
+  orderId: string;
+  status: Status;
 }
 
 const URL = "/orders";
@@ -49,14 +51,69 @@ export const useCreateOrder = ({ queryKey }: Partial<QueryContext> = {}) => {
   });
 };
 
-export const useOrdersByMe = (userId?: string) => {
+export const useCancelOrder = ({ queryKey }: Partial<QueryContext> = {}) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (orderId: string) => {
+      const response = await instance.put<OrderResponse>(
+        `${URL}/cancel-order`,
+        { orderId }
+      );
+
+      return response.data;
+    },
+    onSuccess: async () => {
+      if (queryKey) {
+        await queryClient.invalidateQueries({ queryKey });
+      }
+    },
+  });
+};
+
+export const useOrdersByMe = (user?: string) => {
   return useQuery({
-    queryKey: ["orders", userId],
+    queryKey: ["ordersUser", user],
     queryFn: async () => {
-      const { data } = await instance.get<OrderResponse[]>(URL);
+      const { data } = await instance.get<OrderResponse[]>(`${URL}/user`);
 
       return data;
     },
-    enabled: !!userId,
+    enabled: !!user,
+  });
+};
+
+export const useOrders = (page?: number, limit?: number) => {
+  return useQuery({
+    queryKey: ["orders", page, limit],
+    queryFn: async () => {
+      const { data } = await instance.get<ListResponse<OrderResponse>>(URL, {
+        params: { page, limit },
+      });
+
+      return data;
+    },
+    enabled: !!page || !!limit,
+  });
+};
+
+export const useUpdateStatusOrder = ({
+  queryKey,
+}: Partial<QueryContext> = {}) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ orderId, status }: UpdateStatusOrderParams) => {
+      const response = await instance.put<OrderResponse>(`${URL}/${orderId}`, {
+        status,
+      });
+
+      return response.data;
+    },
+    onSuccess: async () => {
+      if (queryKey) {
+        await queryClient.invalidateQueries({ queryKey });
+      }
+    },
   });
 };

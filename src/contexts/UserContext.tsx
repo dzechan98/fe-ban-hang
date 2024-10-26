@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { UserResponse as User } from "@api/users";
 import { ROUTES } from "@router/constants";

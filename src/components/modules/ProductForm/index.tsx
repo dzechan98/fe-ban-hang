@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CategoryResponse, useListCategories } from "@api/categories";
 import {
   ProductInput,
@@ -193,7 +192,7 @@ export const ProductForm = () => {
                 <UploadImage
                   label="Hình ảnh đại diện"
                   onChange={(url) => field.onChange(url)}
-                  onRemove={(id) => field.onChange("")}
+                  onRemove={() => field.onChange("")}
                   error={!!error}
                   helperText={error?.message}
                   reset={resetImages}

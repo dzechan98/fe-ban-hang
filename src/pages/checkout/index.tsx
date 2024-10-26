@@ -131,8 +131,6 @@ export const CheckoutPage = () => {
     }
   }, [address]);
 
-  console.log(address);
-
   useEffect(() => {
     if (data) {
       setAddress(data);

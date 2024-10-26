@@ -22,6 +22,7 @@ import {
   CheckoutPage,
   PurchasePage,
   OrderSuccessPage,
+  OrderPage,
 } from "../pages";
 import { DefaultLayout } from "@layouts/DefaultLayout";
 import { AdminLayout } from "@layouts/AdminLayout";
@@ -128,6 +129,7 @@ const useAppRouter = () => {
                         },
                       ],
                     },
+                    { path: ROUTES.orders, element: <OrderPage /> },
                   ],
                 },
               ],
