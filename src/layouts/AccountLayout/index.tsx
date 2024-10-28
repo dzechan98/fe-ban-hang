@@ -13,12 +13,28 @@ import {
 } from "@mui/material";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import { ROUTES } from "@router/constants";
 
+const menu = [
+  {
+    key: 1,
+    icon: <PersonOutlineOutlinedIcon fontSize="small" />,
+    title: "Hồ sơ của tôi",
+    path: ROUTES.account.profile,
+  },
+  {
+    key: 2,
+    icon: <ShoppingBagOutlinedIcon fontSize="small" />,
+    title: "Đơn mua",
+    path: ROUTES.account.purchase,
+  },
+];
+
 const AccountLayout = () => {
   const { user } = useAuth();
+  const { pathname } = useLocation();
   const navigate = useNavigate();
 
   return (
@@ -35,8 +51,7 @@ const AccountLayout = () => {
           />
           <Box>
             <Typography
-              variant="h2"
-              fontSize="14px"
+              variant="body2"
               sx={{
                 overflow: "hidden",
                 textOverflow: "ellipsis",
@@ -63,30 +78,25 @@ const AccountLayout = () => {
         </Stack>
         <Divider />
         <MenuList>
-          <MenuItem>
-            <ListItemIcon>
-              <PersonOutlineOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Hồ sơ của tôi</ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemIcon>
-              <ShoppingBagOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Đơn mua</ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemIcon>
-              <ShoppingBagOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Đổi mật khẩu</ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemIcon>
-              <ShoppingBagOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Đơn mua</ListItemText>
-          </MenuItem>
+          {menu.map((item) => (
+            <MenuItem key={item.key} onClick={() => navigate(item.path)}>
+              <ListItemIcon
+                sx={{
+                  color: pathname === item.path ? "primary.main" : "inherit",
+                }}
+              >
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={item.title}
+                sx={{
+                  ".MuiListItemText-primary": {
+                    color: pathname === item.path ? "primary.main" : "inherit",
+                  },
+                }}
+              />
+            </MenuItem>
+          ))}
         </MenuList>
       </Box>
       <Box flexGrow={1}>

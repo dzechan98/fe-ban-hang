@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { UserResponse as User } from "@api/users";
-import { ROUTES } from "@router/constants";
 import { useGetMe } from "@api/users";
 
 type AuthContextType = {
@@ -15,7 +14,6 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 export const AuthProvider = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
 
   const accessToken = localStorage.getItem("accessToken");
   const { data, error } = useGetMe(accessToken);
@@ -35,14 +33,12 @@ export const AuthProvider = () => {
     }
 
     setIsLoading(false);
-    navigate(ROUTES.login);
-  }, [data, error, accessToken, navigate]);
+  }, [data, error, accessToken]);
 
   const signOut = () => {
     setUser(null);
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    navigate(ROUTES.login);
   };
 
   return (

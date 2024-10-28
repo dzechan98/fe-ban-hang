@@ -25,7 +25,7 @@ import * as yup from "yup";
 interface AddressFormProps {
   type: "edit" | "add";
   addressId?: string;
-  onTypeView: () => void;
+  onTypeView?: () => void;
 }
 
 export const AddressForm: React.FC<AddressFormProps> = ({
@@ -68,7 +68,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
     if (!addressId) {
       try {
         await createAddressMutation.mutateAsync(body);
-        onTypeView();
+        onTypeView?.();
       } catch (error) {
         toast.error(getError(error));
       }
@@ -78,7 +78,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 
     try {
       await editAddressMutation.mutateAsync({ id: addressId, input: body });
-      onTypeView();
+      onTypeView?.();
     } catch (error) {
       toast.error(getError(error));
     }

@@ -23,15 +23,20 @@ export const View: React.FC<ViewProps> = ({
   onConfirm,
 }) => {
   return (
-    <Box minWidth="40vw">
+    <Box minWidth="40vw" display="flex" flexDirection="column" height="100vh">
       <Box p={2}>
         <Typography>Địa chỉ của tôi</Typography>
       </Box>
       <Divider />
+
       <Box
         pt={2}
         px={2}
-        minHeight="60vh"
+        sx={{
+          flexGrow: 1,
+          overflowY: "auto",
+          minHeight: 0,
+        }}
         display="flex"
         flexDirection="column"
         gap={2}

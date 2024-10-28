@@ -39,6 +39,7 @@ const paymentStatusMessages: Record<
 const paymentStatusRenderer = ({
   value,
 }: ICellRendererParams<OrderResponse>) => {
+  console.log(value);
   const status =
     paymentStatusMessages[value] || paymentStatusMessages["pending"];
   return <Chip label={status.label} color={status.color} />;
@@ -52,7 +53,7 @@ const statusMessages: Record<
   }
 > = {
   pending: {
-    label: "Đang chờ xử lý",
+    label: "Chờ duyệt",
     color: "warning",
   },
   shipped: {
@@ -83,7 +84,7 @@ const getOrderActions = (
     case "pending":
       return (
         <>
-          <Tooltip title="Giao hàng đơn này">
+          <Tooltip title="Xác nhận giao hàng đơn này">
             <Button
               color="info"
               size="small"
@@ -92,7 +93,7 @@ const getOrderActions = (
                 onUpdateStatusOrder({ orderId: data._id, status: "shipped" })
               }
             >
-              Giao hàng
+              Xác nhận
             </Button>
           </Tooltip>
           <Tooltip title="Hủy đơn hàng">
@@ -106,21 +107,6 @@ const getOrderActions = (
             </Button>
           </Tooltip>
         </>
-      );
-    case "shipped":
-      return (
-        <Tooltip title="Xác nhận đơn hàng đã được giao thành công">
-          <Button
-            color="success"
-            size="small"
-            variant="contained"
-            onClick={() =>
-              onUpdateStatusOrder({ orderId: data._id, status: "delivered" })
-            }
-          >
-            Xác nhận giao thành công
-          </Button>
-        </Tooltip>
       );
     default:
       return null;
@@ -184,6 +170,7 @@ const getColumns = (
     },
     {
       headerName: "Trạng thái thanh toán",
+      field: "paymentStatus",
       cellRenderer: paymentStatusRenderer,
       cellStyle: styleCenter,
     },

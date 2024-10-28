@@ -1,4 +1,10 @@
-import { Status, useCancelOrder, useOrdersByMe } from "@api/order";
+import {
+  Status,
+  UpdateStatusOrderParams,
+  useCancelOrder,
+  useOrdersByMe,
+  useUpdateStatusOrder,
+} from "@api/order";
 import { ConfirmDialog, Page } from "@components/core";
 import { useAuth } from "@contexts/UserContext";
 import { useDisclosure } from "@hooks/useDisclosure";
@@ -45,7 +51,7 @@ const mappingStatusOrder = (
     case "delivered":
       return {
         color: "success",
-        label: "Đã giao",
+        label: "Đã nhận hàng",
       };
     default:
       return {
@@ -59,7 +65,10 @@ export const PurchasePage = () => {
   const { user } = useAuth();
   const { data } = useOrdersByMe(user?._id);
   const cancelOrderMutation = useCancelOrder({
-    queryKey: ["orders", user?._id],
+    queryKey: ["ordersUser", user?._id],
+  });
+  const updateStatusOrderMutation = useUpdateStatusOrder({
+    queryKey: ["ordersUser", user?._id],
   });
 
   const cancelOrderDisclosure = useDisclosure({});
@@ -74,6 +83,17 @@ export const PurchasePage = () => {
     } finally {
       setOrderId("");
       cancelOrderDisclosure.onClose();
+    }
+  };
+
+  const handleUpdateStatusOrder = async ({
+    orderId,
+    status,
+  }: UpdateStatusOrderParams) => {
+    try {
+      await updateStatusOrderMutation.mutateAsync({ orderId, status });
+    } catch (error) {
+      toast.error(getError(error));
     }
   };
 
@@ -162,9 +182,7 @@ export const PurchasePage = () => {
               pt={2}
               color="white"
             >
-              {["canceled", "shipped", "delivered"].includes(
-                order.status as string
-              ) && (
+              {order.status === "pending" && (
                 <Button
                   color="error"
                   size="small"
@@ -172,6 +190,24 @@ export const PurchasePage = () => {
                   onClick={() => handleOpenDialog(order._id)}
                 >
                   Hủy
+                </Button>
+              )}
+              {order.status === "shipped" && (
+                <Button
+                  color="warning"
+                  size="small"
+                  variant="contained"
+                  sx={{
+                    minWidth: 250,
+                  }}
+                  onClick={() =>
+                    handleUpdateStatusOrder({
+                      orderId: order._id,
+                      status: "delivered",
+                    })
+                  }
+                >
+                  Xác nhận đã nhận được hàng
                 </Button>
               )}
               <Typography variant="body2" textAlign="end" width="100%">
