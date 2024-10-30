@@ -38,7 +38,12 @@ export const SlideImage = ({ images }: SlideImageProps) => {
   return (
     <Box>
       <CardMedia
-        sx={{ height: 450, width: 450, objectFit: "cover", cursor: "pointer" }}
+        sx={{
+          aspectRatio: "1.5",
+          width: 500,
+          objectFit: "cover",
+          cursor: "pointer",
+        }}
         image={images[index]}
         title={images[index]}
         onClick={imageDisclosure.onOpen}
@@ -79,7 +84,7 @@ export const SlideImage = ({ images }: SlideImageProps) => {
                 borderColor={i == index ? "primary.main" : "transparent"}
               >
                 <CardMedia
-                  sx={{ height: 82, cursor: "pointer" }}
+                  sx={{ width: "100%", aspectRatio: "1.5", cursor: "pointer" }}
                   image={image}
                   title={image}
                   onClick={() => setIndex(i)}

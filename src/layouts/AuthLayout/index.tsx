@@ -36,11 +36,11 @@ export const AuthLayout = ({ isLogin, children }: AuthLayoutProps) => {
         </Typography>
         {children}
         <Stack direction="row" gap={0.5}>
-          <Typography fontSize="14px">
+          <Typography variant="body2">
             {isLogin ? "Chưa có tài khoản?" : "Đã có tài khoản?"}
           </Typography>
           <RouterLink to={isLogin ? ROUTES.register : ROUTES.login}>
-            <Typography fontSize="14px" fontWeight="600">
+            <Typography variant="body2" fontWeight="600">
               {isLogin ? "Đăng ký tài khoản mới" : "Đăng nhập ngay"}
             </Typography>
           </RouterLink>

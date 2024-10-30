@@ -21,22 +21,29 @@ export const Product = ({
   return (
     <Box
       border={1}
+      bgcolor="white"
       borderColor="#ccc"
       sx={{
         cursor: "pointer",
+        borderRadius: "6px",
         "&:hover": {
           borderColor: "primary.main",
           transform: "translateY(-1px)",
           transition: "all ease 0.3s",
         },
       }}
+      padding={1.5}
       onClick={() => navigate(`/products/${_id}`)}
     >
-      <CardMedia sx={{ height: 188 }} image={image_thumbnail} title={title} />
-      <Box padding={1} bgcolor="white">
+      <CardMedia
+        sx={{ aspectRatio: "1.5", width: "100%" }}
+        image={image_thumbnail}
+        title={title}
+      />
+      <Box>
         <Typography
-          fontSize="14px"
-          marginBottom={0.5}
+          variant="body2"
+          marginY={1}
           sx={{
             overflow: "hidden",
             textOverflow: "ellipsis",
@@ -53,7 +60,7 @@ export const Product = ({
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography color="primary" fontSize="14px">
+          <Typography color="primary" variant="body2">
             {`₫${price.toLocaleString("vi-VN")}`}
           </Typography>
           <Typography fontSize="12px">{`Đã bán : ${sold}`}</Typography>

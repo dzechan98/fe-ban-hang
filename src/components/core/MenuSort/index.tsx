@@ -41,7 +41,7 @@ export const MenuSort: React.FC<MenuSortProps> = ({
 
   return (
     <Stack bgcolor="#ededed" direction="row" gap={2} alignItems="center" p={2}>
-      <Typography fontSize="14px">Sắp xếp theo</Typography>
+      <Typography variant="body2">Sắp xếp theo</Typography>
       <Button variant="contained" size="small">
         Mới nhất
       </Button>
@@ -79,7 +79,7 @@ export const MenuSort: React.FC<MenuSortProps> = ({
                 setFilterPrice?.(item);
               }}
             >
-              <Typography fontSize="14px">{`Giá: ${item.label}`}</Typography>
+              <Typography variant="body2">{`Giá: ${item.label}`}</Typography>
               {item.label === filterPrice?.label && (
                 <ListItemIcon
                   sx={{

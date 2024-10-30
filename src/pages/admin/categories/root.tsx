@@ -53,9 +53,7 @@ const getColumns = (
               alt={data.title}
               style={{
                 display: "block",
-                width: 80,
-                height: 80,
-                objectFit: "cover",
+                height: 30,
                 borderRadius: "2px",
               }}
               loading="lazy"

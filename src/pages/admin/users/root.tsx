@@ -29,7 +29,7 @@ const getColumns = (
       wrapText: true,
       cellRenderer: ({ data }: ICellRendererParams<UserResponse>) =>
         data?.name && (
-          <Typography fontSize="14px">{capitalizeWords(data.name)}</Typography>
+          <Typography variant="body2">{capitalizeWords(data.name)}</Typography>
         ),
       cellStyle: styleCenter,
     },

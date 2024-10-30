@@ -12,7 +12,7 @@ export const CartPreview: React.FC<CartPreviewProps> = ({ onClosePopup }) => {
 
   return (
     <Box width={600} bgcolor="white" border={1} borderColor="#ccc">
-      <Typography color="#ccc" fontSize="14px" p={2}>
+      <Typography color="#ccc" variant="body2" p={2}>
         Sản Phẩm Mới Thêm
       </Typography>
       {cart?.items.slice(0, 5).map((product) => (
@@ -57,7 +57,7 @@ export const CartPreview: React.FC<CartPreviewProps> = ({ onClosePopup }) => {
             </Typography>
             <Typography fontSize="12px">{`Số lượng: ${product.quantity}`}</Typography>
           </Box>
-          <Typography color="primary" fontSize="14px">
+          <Typography color="primary" variant="body2">
             {`₫${product.price.toLocaleString("vi-VN")}`}
           </Typography>
         </Stack>

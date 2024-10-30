@@ -24,7 +24,7 @@ export const ProductDetailPage = () => {
   const { data: listProducts, isLoading: isLoadingListProducts } =
     useListProducts({
       page: 1,
-      limit: 6,
+      limit: 5,
       category: data?.category._id,
       id: data?._id,
     });
@@ -86,16 +86,16 @@ export const ProductDetailPage = () => {
         <Page title={capitalizeWords(data.title)}>
           <Stack gap={3}>
             <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
-              <RouterLink to={ROUTES.home} fontSize="14px">
+              <RouterLink to={ROUTES.home} variant="body2">
                 VStore
               </RouterLink>
               <RouterLink
                 to={`/filter/${data.category.slug}.${data.category._id}`}
-                fontSize="14px"
+                variant="body2"
               >
                 {capitalizeWords(data.category.title)}
               </RouterLink>
-              <Typography fontSize="14px">
+              <Typography variant="body2">
                 {capitalizeWords(data.title)}
               </Typography>
             </Breadcrumbs>
@@ -104,12 +104,11 @@ export const ProductDetailPage = () => {
               bgcolor="white"
               padding={2}
               sx={{ borderRadius: "2px" }}
-              gap={2}
+              gap={3}
             >
-              <Stack width={450}>
+              <Stack width={500}>
                 <SlideImage images={[data.image_thumbnail, ...data.images]} />
               </Stack>
-              <Stack></Stack>
               <Stack flexGrow={1} gap={2}>
                 <Typography fontSize="20px">
                   {capitalizeWords(data.title)}
@@ -124,20 +123,20 @@ export const ProductDetailPage = () => {
                     color="primary"
                   >{`₫${data.price.toLocaleString("vi-VN")}`}</Typography>
                   <Typography
-                    fontSize="14px"
+                    variant="body2"
                     color="text.secondary"
                   >{`${data.sold} đã bán`}</Typography>
                 </Stack>
                 <Stack direction="row" alignItems="center" gap={2}>
                   <Typography
                     color="text.secondary"
-                    fontSize="14px"
+                    variant="body2"
                     minWidth="100px"
                   >
                     Số lượng
                   </Typography>
                   <Quantity count={count} setCount={setCount} />
-                  <Typography color="text.secondary" fontSize="14px">{`${
+                  <Typography color="text.secondary" variant="body2">{`${
                     data.quantity - data.sold
                   } sản phẩm có sẵn`}</Typography>
                 </Stack>
@@ -181,7 +180,7 @@ export const ProductDetailPage = () => {
             isLoading={isLoadingListProducts}
             listProducts={listProducts}
             title="SẢN PHẨM LIÊN QUAN"
-            size={2}
+            size={12 / 5}
           />
         </Page>
       )}

@@ -1,7 +1,8 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { UserResponse as User } from "@api/users";
 import { useGetMe } from "@api/users";
+import { ROUTES } from "@router/constants";
 
 type AuthContextType = {
   user?: User | null;
@@ -12,16 +13,25 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const accessToken = localStorage.getItem("accessToken");
   const { data, error } = useGetMe(accessToken);
 
+  const signOut = () => {
+    setUser(null);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    navigate(ROUTES.login);
+  };
+
   useEffect(() => {
     if (accessToken) {
       if (data) {
         setUser(data);
+
         setIsLoading(false);
         return;
       }
@@ -34,12 +44,6 @@ export const AuthProvider = () => {
 
     setIsLoading(false);
   }, [data, error, accessToken]);
-
-  const signOut = () => {
-    setUser(null);
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-  };
 
   return (
     <AuthContext.Provider value={{ user, isLoading, signOut }}>

@@ -1,6 +1,5 @@
 import { useListCategories } from "@api/categories";
 import { Box, Typography, Grid2 } from "@mui/material";
-import { capitalizeWords } from "@utils/capitalizeWords";
 import { useNavigate } from "react-router-dom";
 
 export const ListCategories = () => {
@@ -8,13 +7,45 @@ export const ListCategories = () => {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ bgcolor: "white" }}>
-      <Box padding={2}>
-        <Typography color="primary" fontWeight={600}>
-          DANH MỤC
-        </Typography>
-      </Box>
-      <Grid2 container>
+    <Box sx={{ bgcolor: "white" }} p={2}>
+      <Typography color="primary" fontWeight={600} mb={2}>
+        THƯƠNG HIỆU
+      </Typography>
+      <Grid2 container spacing={1.5}>
+        {data &&
+          data.results.map((category) => (
+            <Grid2 size={12 / 5} key={category._id}>
+              <Box
+                p={2}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                bgcolor="#f2f4f7"
+                border={1}
+                borderColor="transparent"
+                sx={{
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  transition: "0.3s all",
+                  "&:hover": {
+                    borderColor: "primary.main",
+                  },
+                }}
+                onClick={() =>
+                  navigate(`/filter/${category.slug}.${category._id}`)
+                }
+              >
+                <Box
+                  component="img"
+                  src={category.image_url}
+                  alt={category.title}
+                  sx={{ height: 50 }}
+                />
+              </Box>
+            </Grid2>
+          ))}
+      </Grid2>
+      {/* <Grid2 container>
         {data &&
           data.results.slice(0, 20).map((category, index) => (
             <Grid2
@@ -46,9 +77,7 @@ export const ListCategories = () => {
                 src={category.image_url}
                 alt={category.title}
                 style={{
-                  height: 84,
-                  width: 84,
-                  objectFit: "cover",
+                  height: 20,
                 }}
                 loading="lazy"
               />
@@ -59,7 +88,7 @@ export const ListCategories = () => {
               </Box>
             </Grid2>
           ))}
-      </Grid2>
+      </Grid2> */}
     </Box>
   );
 };

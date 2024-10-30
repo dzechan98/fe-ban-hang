@@ -35,7 +35,7 @@ export const ListProducts: React.FC<ListProductsProps> = ({
   return (
     <Stack marginTop={2}>
       {!isLoading && !listProducts?.results.length && (
-        <Typography fontSize="14px">Không có sản phẩm nào </Typography>
+        <Typography variant="body2">Không có sản phẩm nào </Typography>
       )}
       {title && listProducts?.results && (
         <Stack

@@ -10,10 +10,10 @@ interface LoadMoreProductsProps {
   size?: number;
 }
 export const LoadMoreProduct = ({
-  limit = 12,
+  limit = 10,
   category,
   id,
-  size = 2,
+  size = 12 / 5,
 }: LoadMoreProductsProps) => {
   const [index, setIndex] = useState(1);
   const { data, isLoading } = useListProducts({
@@ -40,7 +40,7 @@ export const LoadMoreProduct = ({
   return (
     <Stack alignItems="center" gap={2} width="100%">
       {!listProducts && !isLoading && (
-        <Typography fontSize="14px">Không có sản phẩm nào </Typography>
+        <Typography variant="body2">Không có sản phẩm nào </Typography>
       )}
       <Grid2 container spacing={0.75} width="100%">
         {listProducts?.results &&
@@ -62,7 +62,7 @@ export const LoadMoreProduct = ({
             </Grid2>
           ))}
       </Grid2>
-      {listProducts?.count && index < Math.ceil(listProducts?.count / 12) && (
+      {listProducts?.count && index < Math.ceil(listProducts?.count / 10) && (
         <Button
           variant="outlined"
           sx={{

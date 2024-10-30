@@ -40,7 +40,7 @@ export const FilterProductPage = () => {
   const { data: listProducts, isLoading } = useListProducts({
     category: categoryId,
     page,
-    limit: 10,
+    limit: 8,
     sortPrice: filterPrice?.value,
   });
 
@@ -74,7 +74,7 @@ export const FilterProductPage = () => {
                         ) && <ArrowRightIcon color="primary" />}
                       </ListItemIcon>
                       <Typography
-                        fontSize="14px"
+                        variant="body2"
                         sx={{
                           "&:hover": {
                             color: "primary.main",
@@ -97,8 +97,7 @@ export const FilterProductPage = () => {
               page={page}
               setPage={setPage}
               isLoading={isLoading}
-              size={12 / 5}
-              limit={10}
+              size={3}
               listProducts={listProducts}
             />
           </Box>

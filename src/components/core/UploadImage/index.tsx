@@ -160,7 +160,7 @@ export const UploadImage: React.FC<UploadImageProps> = ({
                 color={error ? "error" : "primary"}
                 sx={{ fontSize: 48 }}
               />
-              <Typography fontSize="14px" color={error ? "error" : "text"}>
+              <Typography variant="body2" color={error ? "error" : "text"}>
                 Tải ảnh
               </Typography>
             </Stack>

@@ -50,10 +50,10 @@ export const ProfilePage = () => {
           <React.Fragment key={index}>
             {item.value && (
               <Stack direction="row" gap={3}>
-                <Typography width={160} color="#555555cc" fontSize="14px">
+                <Typography width={160} color="#555555cc" variant="body2">
                   {item.label}
                 </Typography>
-                <Typography fontSize="14px">{item.value}</Typography>
+                <Typography variant="body2">{item.value}</Typography>
               </Stack>
             )}
           </React.Fragment>

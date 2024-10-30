@@ -63,20 +63,15 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 
   const onSubmit = handleSubmit(async (value) => {
     if (!user) return;
-
     const body: AddressInput = { ...value, userId: user?._id };
-    if (!addressId) {
-      try {
-        await createAddressMutation.mutateAsync(body);
-        onTypeView?.();
-      } catch (error) {
-        toast.error(getError(error));
-      }
-
-      return;
-    }
 
     try {
+      if (!addressId) {
+        await createAddressMutation.mutateAsync(body);
+        onTypeView?.();
+
+        return;
+      }
       await editAddressMutation.mutateAsync({ id: addressId, input: body });
       onTypeView?.();
     } catch (error) {

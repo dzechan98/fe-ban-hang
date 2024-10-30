@@ -29,19 +29,34 @@ const getColumns = (
   return [
     {
       headerName: "Tên sản phẩm",
-      minWidth: 250,
+      minWidth: 300,
       wrapText: true,
       cellRenderer: ({ data }: ICellRendererParams<ProductResponse>) =>
         data && (
-          <Typography fontSize="14px">{capitalizeWords(data.title)}</Typography>
+          <Typography variant="body2">{capitalizeWords(data.title)}</Typography>
         ),
       cellStyle: styleCenter,
     },
     {
-      headerName: "Danh mục",
+      headerName: "Hãng",
       maxWidth: 200,
-      wrapText: true,
-      valueGetter: ({ data }) => data && capitalizeWords(data.category.title),
+      cellRenderer: ({ data }: ICellRendererParams<ProductResponse>) =>
+        data && (
+          <Stack alignItems="center" justifyContent="center" padding={1}>
+            <img
+              src={data.category.image_url}
+              alt={data.title}
+              style={{
+                display: "block",
+                width: 120,
+                height: 20,
+                objectFit: "cover",
+                borderRadius: "2px",
+              }}
+              loading="lazy"
+            />
+          </Stack>
+        ),
       cellStyle: styleCenter,
     },
     {
