@@ -12,12 +12,14 @@ export interface OrderInput {
   totalPrice: number;
   paymentMethod?: string;
   status?: Status;
+  shippingFee: number;
   paymentStatus?: string;
   shippingAddress: AddressResponse;
 }
 
 export interface OrderResponse extends OrderInput {
   _id: string;
+  orderCode: string;
   orderDate: string;
   user: UserResponse;
   shippedDate: string;
@@ -104,9 +106,12 @@ export const useUpdateStatusOrder = ({
 
   return useMutation({
     mutationFn: async ({ orderId, status }: UpdateStatusOrderParams) => {
-      const response = await instance.put<OrderResponse>(`${URL}/${orderId}`, {
-        status,
-      });
+      const response = await instance.put<OrderResponse>(
+        `${URL}/update-status/${orderId}`,
+        {
+          status,
+        }
+      );
 
       return response.data;
     },

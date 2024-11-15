@@ -23,6 +23,7 @@ import {
   PurchasePage,
   OrderSuccessPage,
   OrderPage,
+  DashboardPage,
 } from "../pages";
 import { DefaultLayout } from "@layouts/DefaultLayout";
 import { AdminLayout } from "@layouts/AdminLayout";
@@ -87,6 +88,7 @@ const useAppRouter = () => {
                 {
                   element: <AdminLayout />,
                   children: [
+                    { path: ROUTES.dashboard, element: <DashboardPage /> },
                     {
                       path: ROUTES.categories.root,
                       children: [

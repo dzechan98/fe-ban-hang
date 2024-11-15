@@ -39,7 +39,6 @@ const paymentStatusMessages: Record<
 const paymentStatusRenderer = ({
   value,
 }: ICellRendererParams<OrderResponse>) => {
-  console.log(value);
   const status =
     paymentStatusMessages[value] || paymentStatusMessages["pending"];
   return <Chip label={status.label} color={status.color} />;
@@ -120,7 +119,7 @@ const getColumns = (
   return [
     {
       headerName: "Mã đơn",
-      field: "_id",
+      field: "orderCode",
       cellStyle: styleCenter,
     },
     {
@@ -143,6 +142,14 @@ const getColumns = (
       headerName: "Tổng giá",
       valueGetter: ({ data }) =>
         data && data.totalPrice.toLocaleString("vi-VN"),
+      cellStyle: styleCenter,
+    },
+    {
+      headerName: "Địa chỉ",
+      width: 300,
+      valueGetter: ({ data }) =>
+        data &&
+        `${data.shippingAddress.street}, ${data.shippingAddress.ward}, ${data.shippingAddress.district}, ${data.shippingAddress.city}`,
       cellStyle: styleCenter,
     },
     {
@@ -175,7 +182,7 @@ const getColumns = (
       cellStyle: styleCenter,
     },
     {
-      headerName: "Hành động",
+      headerName: "Thao tác",
       cellClass: "no-border",
       cellStyle: styleCenter,
       cellRenderer: ({ data }: ICellRendererParams<OrderResponse>) =>

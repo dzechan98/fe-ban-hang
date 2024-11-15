@@ -1,5 +1,5 @@
 import { ConfirmDialog, Page, RouterLink } from "@components/core";
-import { Button, IconButton, Stack, Typography } from "@mui/material";
+import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import { ColDef, ICellRendererParams } from "ag-grid-community";
 import { Table } from "@components/core";
 import { useMemo, useState } from "react";
@@ -28,42 +28,37 @@ const getColumns = (
 ) => {
   return [
     {
-      headerName: "Tên danh mục",
+      headerName: "Danh mục",
       flex: 1,
       wrapText: true,
       valueGetter: ({ data }) => data && capitalizeWords(data.title),
       cellStyle: styleCenter,
     },
     {
-      headerName: "Slug",
-      flex: 1,
-      wrapText: true,
-      valueGetter: ({ data }) => data && data.slug,
-      cellStyle: styleCenter,
-    },
-    {
-      headerName: "Thumbnail",
+      headerName: "Hình ảnh",
       autoHeight: true,
       flex: 1,
       cellRenderer: ({ data }: ICellRendererParams<CategoryResponse>) =>
         data && (
           <Stack alignItems="center" justifyContent="center" padding={1}>
-            <img
+            <Box
+              component="img"
               src={data.image_url}
               alt={data.title}
-              style={{
-                display: "block",
-                height: 30,
+              sx={{
+                height: 40,
                 borderRadius: "2px",
               }}
               loading="lazy"
             />
           </Stack>
         ),
-      cellStyle: styleCenter,
+      cellStyle: {
+        textAlign: "center",
+      },
     },
     {
-      headerName: "Actión",
+      headerName: "Thao tác",
       cellClass: "no-border",
       cellStyle: styleCenter,
       width: 140,
@@ -97,7 +92,7 @@ export const CategoriesPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const page = Number(searchParams.get("page") ?? 1);
-  const limit = Number(searchParams.get("limit") ?? 5);
+  const limit = Number(searchParams.get("limit") ?? 8);
 
   const deleteCategoryDisclosure = useDisclosure({});
 

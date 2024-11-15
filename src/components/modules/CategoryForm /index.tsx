@@ -81,7 +81,7 @@ export const CategoryForm = () => {
         <Grid2 container spacing={2}>
           <Grid2 size={12}>
             <RHFTextField
-              label="Tên danh mục"
+              label="Danh mục"
               controlProps={{
                 name: "title",
                 control,

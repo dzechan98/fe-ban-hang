@@ -20,7 +20,6 @@ interface UploadImageProps {
   helperText?: string;
   reset?: boolean;
   initialImage?: string;
-  type?: "circle" | "rectangle";
   index?: number;
 }
 
@@ -32,10 +31,10 @@ export const UploadImage: React.FC<UploadImageProps> = ({
   helperText,
   initialImage = "",
   reset = false,
-  type = "rectangle",
   index,
 }) => {
   const [image, setImage] = useState<string>(initialImage);
+  const [hovered, setHovered] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -81,7 +80,7 @@ export const UploadImage: React.FC<UploadImageProps> = ({
       const url = await uploadImage(file);
       setImage(url);
       onChange?.(url);
-    } catch (error) {
+    } catch (_) {
       toast.error("Không thể tải lên hình ảnh. Vui lòng thử lại.");
     } finally {
       setIsUploading(false);
@@ -123,23 +122,15 @@ export const UploadImage: React.FC<UploadImageProps> = ({
       )}
       <Stack
         sx={{
-          borderRadius: type === "circle" ? "50%" : 1,
+          borderRadius: 1,
           borderWidth: "1px",
+          borderColor: error ? "error.main" : "grey.400",
           borderStyle: image ? "solid" : "dashed",
-          borderColor: error
-            ? "error.main"
-            : image
-            ? "primary.main"
-            : "text.main",
           p: 1,
-          aspectRatio: "1/1",
-          objectFit: "cover",
+          width: "100%",
+          aspectRatio: "1.5",
           alignItems: "center",
           justifyContent: "center",
-          position: "relative",
-          "&:hover": {
-            borderColor: "primary.main",
-          },
         }}
         onClick={handleButtonClick}
       >
@@ -168,28 +159,42 @@ export const UploadImage: React.FC<UploadImageProps> = ({
         </Stack>
         {image && !isUploading && (
           <>
-            <img
-              src={image}
-              alt="Uploaded"
-              style={{
-                display: "block",
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                borderRadius: type === "circle" ? "50%" : 2,
-              }}
-            />
-            <IconButton
+            <Stack
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              position="relative"
+              bgcolor={hovered ? "rgba(0,0,0,0.8)" : "transparent"}
               sx={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                transform: "translate(50%,-50%)",
+                backgroundImage: `url(${image})`,
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                width: "100%",
+                aspectRatio: "1.5",
+                borderRadius: 1,
               }}
-              onClick={handleRemoveImage}
+              onMouseEnter={() => setHovered(true)}
+              onMouseLeave={() => setHovered(false)}
             >
-              <HighlightOffIcon />
-            </IconButton>
+              {hovered && (
+                <>
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      backgroundColor: "rgba(0,0,0,0.4)",
+                      borderRadius: 4,
+                    }}
+                  ></div>
+                  <IconButton
+                    sx={{ color: "white" }}
+                    onClick={handleRemoveImage}
+                  >
+                    <HighlightOffIcon />
+                  </IconButton>
+                </>
+              )}
+            </Stack>
           </>
         )}
       </Stack>

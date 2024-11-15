@@ -64,12 +64,9 @@ const mappingStatusOrder = (
 export const PurchasePage = () => {
   const { user } = useAuth();
   const { data } = useOrdersByMe(user?._id);
-  const cancelOrderMutation = useCancelOrder({
-    queryKey: ["ordersUser", user?._id],
-  });
-  const updateStatusOrderMutation = useUpdateStatusOrder({
-    queryKey: ["ordersUser", user?._id],
-  });
+  const queryKey = ["ordersUser", user?._id];
+  const cancelOrderMutation = useCancelOrder({ queryKey });
+  const updateStatusOrderMutation = useUpdateStatusOrder({ queryKey });
 
   const cancelOrderDisclosure = useDisclosure({});
   const [orderId, setOrderId] = useState("");
@@ -117,7 +114,7 @@ export const PurchasePage = () => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Typography>Mã đơn hàng: #{order._id}</Typography>
+              <Typography>Mã đơn hàng: #{order.orderCode}</Typography>
               <Chip {...mappingStatusOrder(order.status as Status)} />
             </Stack>
             {order.items.map((product) => (
@@ -174,6 +171,17 @@ export const PurchasePage = () => {
                 </Grid2>
               </Grid2>
             ))}
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              pb={2}
+            >
+              <Typography variant="body2">Phí vận chuyển</Typography>
+              <Typography color="primary" variant="body2" align="right">
+                ₫{order.shippingFee.toLocaleString("vi-VN")}
+              </Typography>
+            </Stack>
             <Divider />
             <Stack
               direction="row"
@@ -218,7 +226,10 @@ export const PurchasePage = () => {
                   fontWeight="bold"
                   color="primary"
                 >
-                  ₫{order.totalPrice.toLocaleString("vi-VN")}
+                  ₫
+                  {(order.totalPrice + order.shippingFee).toLocaleString(
+                    "vi-VN"
+                  )}
                 </Typography>
               </Typography>
             </Stack>

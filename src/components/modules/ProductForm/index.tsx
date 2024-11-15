@@ -7,7 +7,7 @@ import {
 } from "@api/products";
 import { RHFSelect, RHFTextField, UploadImage } from "@components/core";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Button, Grid2, Stack, Typography } from "@mui/material";
+import { Button, Grid2, Stack, Typography } from "@mui/material";
 import { ROUTES } from "@router/constants";
 import { capitalizeWords } from "@utils/capitalizeWords";
 import { getError } from "@utils/getError";
@@ -66,7 +66,6 @@ export const ProductForm = () => {
     resolver: yupResolver(productSchema),
     defaultValues: {
       images: [],
-      quantity: 0,
     },
   });
 
@@ -81,6 +80,7 @@ export const ProductForm = () => {
           title: "",
           description: "",
           color: "",
+          quantity: undefined,
           price: undefined,
           category: "",
           image_thumbnail: "",
@@ -121,7 +121,7 @@ export const ProductForm = () => {
   return (
     <form onSubmit={onSubmit}>
       <Stack gap={2}>
-        <Grid2 container spacing={2}>
+        <Grid2 container spacing={1.5}>
           <Grid2 size={12}>
             <RHFTextField
               label="Tên sản phẩm"
@@ -214,43 +214,28 @@ export const ProductForm = () => {
                   >
                     Danh sách ảnh
                   </Typography>
-                  <Box
-                    border={1}
-                    borderColor={
-                      error
-                        ? "error.main"
-                        : field.value.length > 0
-                        ? "primary.main"
-                        : "text.main"
-                    }
-                    padding={2}
-                    sx={{
-                      borderRadius: 2,
-                    }}
-                  >
-                    <Grid2 container spacing={2.5}>
-                      {[0, 1, 2, 3, 4, 5].map((i) => (
-                        <Grid2 size={12 / 5} key={i}>
-                          <UploadImage
-                            onChange={(url) =>
-                              field.onChange([...field.value, url])
-                            }
-                            onRemove={(id) => {
-                              const newArray = field.value.filter(
-                                (_, index) => id !== index
-                              );
-                              field.onChange(newArray);
-                            }}
-                            error={!!error}
-                            helperText={error?.message}
-                            reset={resetImages}
-                            initialImage={product?.images[i]}
-                            index={i}
-                          />
-                        </Grid2>
-                      ))}
-                    </Grid2>
-                  </Box>
+                  <Grid2 container spacing={1.5}>
+                    {[0, 1, 2, 3, 4, 5].map((i) => (
+                      <Grid2 size={3} key={i}>
+                        <UploadImage
+                          onChange={(url) =>
+                            field.onChange([...field.value, url])
+                          }
+                          onRemove={(id) => {
+                            const newArray = field.value.filter(
+                              (_, index) => id !== index
+                            );
+                            field.onChange(newArray);
+                          }}
+                          error={!!error}
+                          helperText={error?.message}
+                          reset={resetImages}
+                          initialImage={product?.images[i]}
+                          index={i}
+                        />
+                      </Grid2>
+                    ))}
+                  </Grid2>
                   {error?.message && (
                     <Typography color="error" variant="caption">
                       {error?.message}

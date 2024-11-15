@@ -16,7 +16,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "@router/constants";
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  maxWidth: 400,
+  maxWidth: 600,
   margin: "auto",
   marginTop: theme.spacing(4),
   padding: theme.spacing(3),
@@ -31,6 +31,7 @@ const IconWrapper = styled(Box)(({ theme }) => ({
 const OrderDetail = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
+  justifyItems: "flex-start",
   marginBottom: theme.spacing(1),
 }));
 
@@ -46,7 +47,7 @@ const StatusItem = styled(Box)(({ theme }) => ({
 export const OrderSuccessPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { id, timeShipping } = location.state;
+  const { orderCode, timeShipping, address } = location.state;
 
   return (
     <Page
@@ -79,10 +80,10 @@ export const OrderSuccessPage = () => {
           </Typography>
           <OrderDetail>
             <Typography variant="body2" color="text.secondary">
-              Số thứ tự:
+              Mã đơn hàng:
             </Typography>
             <Typography variant="body2" fontWeight="bold">
-              #{id}
+              #{orderCode}
             </Typography>
           </OrderDetail>
           <OrderDetail>
@@ -90,7 +91,7 @@ export const OrderSuccessPage = () => {
               Vận chuyển đến:
             </Typography>
             <Typography variant="body2" fontWeight="bold">
-              John Doe
+              {address}
             </Typography>
           </OrderDetail>
           <StatusItem>

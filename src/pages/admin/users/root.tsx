@@ -24,13 +24,14 @@ const getColumns = (
 ) => {
   return [
     {
-      headerName: "Tên tài khoản",
+      headerName: "Tài khoản",
       minWidth: 250,
       wrapText: true,
       cellRenderer: ({ data }: ICellRendererParams<UserResponse>) =>
         data?.name && (
           <Typography variant="body2">{capitalizeWords(data.name)}</Typography>
         ),
+      flex: 1,
       cellStyle: styleCenter,
     },
     {
@@ -41,16 +42,15 @@ const getColumns = (
       cellStyle: styleCenter,
     },
     {
-      headerName: "Avatar",
+      headerName: "Ảnh đại diện",
       autoHeight: true,
-      width: 120,
       cellRenderer: ({ data }: ICellRendererParams<UserResponse>) =>
         data && (
           <Stack alignItems="center" justifyContent="center" padding={1}>
             <Avatar src={data.image} alt={data.name} />
           </Stack>
         ),
-      cellStyle: styleCenter,
+      cellStyle: { textAlign: "center" },
     },
     {
       headerName: "Số điện thoại",
@@ -59,10 +59,9 @@ const getColumns = (
       flex: 1,
     },
     {
-      headerName: "Actión",
+      headerName: "Thao tác",
       cellClass: "no-border",
       cellStyle: styleCenter,
-      width: 140,
       suppressColumnsToolPanel: true,
       sortable: false,
       cellRenderer: ({ data }: ICellRendererParams<UserResponse>) =>
@@ -93,7 +92,7 @@ export const UsersPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const page = Number(searchParams.get("page") ?? 1);
-  const limit = Number(searchParams.get("limit") ?? 5);
+  const limit = Number(searchParams.get("limit") ?? 10);
 
   const deleteDisclosure = useDisclosure({});
 

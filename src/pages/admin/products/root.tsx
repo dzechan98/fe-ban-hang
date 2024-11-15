@@ -28,7 +28,7 @@ const getColumns = (
 ) => {
   return [
     {
-      headerName: "Tên sản phẩm",
+      headerName: "Sản phẩm",
       minWidth: 300,
       wrapText: true,
       cellRenderer: ({ data }: ICellRendererParams<ProductResponse>) =>
@@ -60,7 +60,7 @@ const getColumns = (
       cellStyle: styleCenter,
     },
     {
-      headerName: "Thumbnail",
+      headerName: "Hình ảnh",
       autoHeight: true,
       width: 160,
       cellRenderer: ({ data }: ICellRendererParams<ProductResponse>) =>
@@ -102,7 +102,7 @@ const getColumns = (
       flex: 1,
     },
     {
-      headerName: "Actión",
+      headerName: "Thao tác",
       cellClass: "no-border",
       cellStyle: styleCenter,
       width: 140,

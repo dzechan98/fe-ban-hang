@@ -107,15 +107,17 @@ export const CheckoutPage = () => {
       const newOrder: OrderInput = {
         items: products.map(({ checked: _, ...product }) => product),
         shippingAddress: address,
-        totalPrice: totalPrice + shippingMethod.fee,
+        shippingFee: shippingMethod.fee,
+        totalPrice: totalPrice,
         paymentMethod: paymentMethod.value,
       };
 
       const res = await createOrderMutation.mutateAsync(newOrder);
       navigate(ROUTES.orderSuccess, {
         state: {
-          id: res._id,
+          orderCode: res.orderCode,
           timeShipping: shippingMethod.deliveryTime,
+          address: `${address?.street}, ${address?.ward}, ${address?.district}, ${address?.city}`,
         },
       });
     } catch (error) {
