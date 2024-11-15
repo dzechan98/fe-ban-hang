@@ -35,13 +35,14 @@ export const FilterProductPage = () => {
   const { data: listCategories } = useListCategories({});
 
   const [page, setPage] = useState(1);
-  const [filterPrice, setFilterPrice] = useState<Option>();
+  const [sortOption, setSortOption] = useState<Option>();
 
   const { data: listProducts, isLoading } = useListProducts({
     category: categoryId,
     page,
     limit: 8,
-    sortPrice: filterPrice?.value,
+    sortBy: sortOption?.value.split(" ")[0],
+    sortOrder: sortOption?.value.split(" ")[1],
   });
 
   return (
@@ -89,10 +90,7 @@ export const FilterProductPage = () => {
             </MenuList>
           </Stack>
           <Box width="100%">
-            <MenuSort
-              filterPrice={filterPrice}
-              setFilterPrice={setFilterPrice}
-            />
+            <MenuSort sortOption={sortOption} setSortOption={setSortOption} />
             <ListProducts
               page={page}
               setPage={setPage}

@@ -46,7 +46,8 @@ export const useListProducts = ({
   page = 1,
   limit = 100,
   category,
-  sortPrice,
+  sortBy,
+  sortOrder,
   title,
   listCategories,
 }: {
@@ -54,7 +55,8 @@ export const useListProducts = ({
   page?: number;
   limit?: number;
   category?: string;
-  sortPrice?: string;
+  sortBy?: string;
+  sortOrder?: string;
   title?: string;
   listCategories?: string;
 }) => {
@@ -65,7 +67,8 @@ export const useListProducts = ({
       limit,
       id,
       category,
-      sortPrice,
+      sortBy,
+      sortOrder,
       title,
       listCategories,
     ],
@@ -76,7 +79,8 @@ export const useListProducts = ({
           page,
           limit,
           category,
-          sortPrice,
+          sortBy,
+          sortOrder,
           title,
           listCategories,
         },
@@ -84,7 +88,6 @@ export const useListProducts = ({
 
       return data;
     },
-    enabled: !!id || !!category || !sortPrice || !title || !listCategories,
   });
 };
 

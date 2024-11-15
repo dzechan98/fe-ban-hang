@@ -36,7 +36,7 @@ export const Product = ({
       onClick={() => navigate(`/products/${_id}`)}
     >
       <CardMedia
-        sx={{ aspectRatio: "1.5", width: "100%" }}
+        sx={{ aspectRatio: "1.5", borderRadius: 1, width: "100%" }}
         image={image_thumbnail}
         title={title}
       />

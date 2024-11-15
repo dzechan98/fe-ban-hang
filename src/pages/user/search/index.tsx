@@ -21,7 +21,7 @@ interface CheckboxOption extends Option {
 export const SearchPage = () => {
   const [searchParams] = useSearchParams();
   const { data: listCategories } = useListCategories({});
-  const [filterPrice, setFilterPrice] = useState<Option>();
+  const [sortOption, setSortOption] = useState<Option>();
   const [listCategoriesSearch, setListCategoriesSearch] =
     useState<CheckboxOption[]>();
   const [page, setPage] = useState(1);
@@ -29,7 +29,8 @@ export const SearchPage = () => {
   const { data: listProducts, isLoading } = useListProducts({
     page,
     limit: 8,
-    sortPrice: filterPrice?.value,
+    sortBy: sortOption?.value.split(" ")[0],
+    sortOrder: sortOption?.value.split(" ")[1],
     title: searchParams.get("keyword") as string,
     listCategories: listCategoriesSearch
       ?.filter((i) => i.checked)
@@ -99,7 +100,7 @@ export const SearchPage = () => {
             </Typography>
             '
           </Typography>
-          <MenuSort filterPrice={filterPrice} setFilterPrice={setFilterPrice} />
+          <MenuSort sortOption={sortOption} setSortOption={setSortOption} />
           <ListProducts
             page={page}
             setPage={setPage}

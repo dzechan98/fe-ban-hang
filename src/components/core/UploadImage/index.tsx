@@ -19,6 +19,7 @@ interface UploadImageProps {
   error?: boolean;
   helperText?: string;
   reset?: boolean;
+  type?: "rectangle" | "circle";
   initialImage?: string;
   index?: number;
 }
@@ -29,6 +30,7 @@ export const UploadImage: React.FC<UploadImageProps> = ({
   onRemove,
   error = false,
   helperText,
+  type = "rectangle",
   initialImage = "",
   reset = false,
   index,
@@ -122,13 +124,13 @@ export const UploadImage: React.FC<UploadImageProps> = ({
       )}
       <Stack
         sx={{
-          borderRadius: 1,
+          borderRadius: type === "circle" ? "50%" : 1,
           borderWidth: "1px",
           borderColor: error ? "error.main" : "grey.400",
           borderStyle: image ? "solid" : "dashed",
           p: 1,
           width: "100%",
-          aspectRatio: "1.5",
+          aspectRatio: type === "circle" ? "1" : "1.5",
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -170,8 +172,8 @@ export const UploadImage: React.FC<UploadImageProps> = ({
                 backgroundPosition: "center",
                 backgroundSize: "cover",
                 width: "100%",
-                aspectRatio: "1.5",
-                borderRadius: 1,
+                aspectRatio: type === "circle" ? "1" : "1.5",
+                borderRadius: type === "circle" ? "50%" : 1,
               }}
               onMouseEnter={() => setHovered(true)}
               onMouseLeave={() => setHovered(false)}
@@ -183,7 +185,7 @@ export const UploadImage: React.FC<UploadImageProps> = ({
                       position: "absolute",
                       inset: 0,
                       backgroundColor: "rgba(0,0,0,0.4)",
-                      borderRadius: 4,
+                      borderRadius: type === "circle" ? "50%" : 4,
                     }}
                   ></div>
                   <IconButton

@@ -18,36 +18,42 @@ export interface Option {
 }
 
 interface MenuSortProps {
-  filterPrice?: Option;
-  setFilterPrice: React.Dispatch<React.SetStateAction<Option | undefined>>;
+  sortOption?: Option;
+  setSortOption: React.Dispatch<React.SetStateAction<Option | undefined>>;
 }
 
-const menuFilterPrice: Option[] = [
+const menuSort: Option[] = [
+  { label: "Mới nhất", value: "createdAt desc" },
+  { label: "Bán chạy", value: "sold desc" },
   {
     label: "Thấp đến cao",
-    value: "asc",
+    value: "price asc",
   },
   {
     label: "Cao đến thấp",
-    value: "desc",
+    value: "price desc",
   },
 ];
 
 export const MenuSort: React.FC<MenuSortProps> = ({
-  filterPrice,
-  setFilterPrice,
+  sortOption = menuSort[0],
+  setSortOption,
 }) => {
   const pricePopover = usePopover("price");
 
   return (
     <Stack bgcolor="#ededed" direction="row" gap={2} alignItems="center" p={2}>
       <Typography variant="body2">Sắp xếp theo</Typography>
-      <Button variant="contained" size="small">
-        Mới nhất
-      </Button>
-      <Button variant="outlined" size="small">
-        Bán chạy
-      </Button>
+      {menuSort.slice(0, 2).map((i, index) => (
+        <Button
+          key={index}
+          size="small"
+          variant={sortOption.label === i.label ? "contained" : "outlined"}
+          onClick={() => setSortOption(i)}
+        >
+          {i.label}
+        </Button>
+      ))}
       <Button
         endIcon={<KeyboardArrowDownIcon />}
         variant="outlined"
@@ -55,7 +61,9 @@ export const MenuSort: React.FC<MenuSortProps> = ({
         color="error"
         onClick={pricePopover.handleOpen}
       >
-        {filterPrice ? `Giá : ${filterPrice.label}` : "Giá"}
+        {menuSort.slice(2, 4).some((i) => i === sortOption)
+          ? `Giá : ${sortOption.label}`
+          : "Giá"}
       </Button>
       <Popover
         open={pricePopover.open}
@@ -71,16 +79,16 @@ export const MenuSort: React.FC<MenuSortProps> = ({
         }}
       >
         <MenuList>
-          {menuFilterPrice.map((item, index) => (
+          {menuSort.slice(2, 4).map((item, index) => (
             <MenuItem
               key={index}
               onClick={() => {
                 pricePopover.handleClose();
-                setFilterPrice?.(item);
+                setSortOption?.(item);
               }}
             >
               <Typography variant="body2">{`Giá: ${item.label}`}</Typography>
-              {item.label === filterPrice?.label && (
+              {item.label === sortOption?.label && (
                 <ListItemIcon
                   sx={{
                     marginLeft: 2,
