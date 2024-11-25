@@ -3,12 +3,10 @@ import { Avatar, Button, IconButton, Stack, Typography } from "@mui/material";
 import { ColDef, ICellRendererParams } from "ag-grid-community";
 import { Table } from "@components/core";
 import { useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { capitalizeWords } from "@utils/capitalizeWords";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useDisclosure } from "@hooks/useDisclosure";
-import { ROUTES } from "@router/constants";
 import { toast } from "react-toastify";
 import { getError } from "@utils/getError";
 import { useDeleteUser, useListUsers, UserResponse } from "@api/users";
@@ -18,10 +16,7 @@ const styleCenter = {
   alignItems: "center",
 };
 
-const getColumns = (
-  onClickEdit: (id: string) => void,
-  onClickDelete: (id: string) => void
-) => {
+const getColumns = (onClickDelete: (id: string) => void) => {
   return [
     {
       headerName: "Tài khoản",
@@ -66,22 +61,13 @@ const getColumns = (
       sortable: false,
       cellRenderer: ({ data }: ICellRendererParams<UserResponse>) =>
         data && (
-          <Stack direction="row" gap={0.25}>
-            <IconButton
-              color="success"
-              size="small"
-              onClick={() => onClickEdit(data._id)}
-            >
-              <EditOutlinedIcon />
-            </IconButton>
-            <IconButton
-              color="warning"
-              size="small"
-              onClick={() => onClickDelete(data._id)}
-            >
-              <DeleteOutlineOutlinedIcon />
-            </IconButton>
-          </Stack>
+          <IconButton
+            color="warning"
+            size="small"
+            onClick={() => onClickDelete(data._id)}
+          >
+            <DeleteOutlineOutlinedIcon />
+          </IconButton>
         ),
       resizable: false,
     },
@@ -90,7 +76,6 @@ const getColumns = (
 
 export const UsersPage = () => {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
 
@@ -103,19 +88,12 @@ export const UsersPage = () => {
     queryKey: ["listUsers", page, limit],
   });
 
-  const handleClickEdit = (id: string) => {
-    navigate(`${ROUTES.users.root}/${id}`);
-  };
-
   const handleClickDelete = (id: string) => {
     setIdUser(id);
     deleteDisclosure.onOpen();
   };
 
-  const columnDefs = useMemo(
-    () => getColumns(handleClickEdit, handleClickDelete),
-    []
-  );
+  const columnDefs = useMemo(() => getColumns(handleClickDelete), []);
 
   const handleConfirmDelete = async () => {
     try {

@@ -38,7 +38,7 @@ export const FilterProductPage = () => {
   const [sortOption, setSortOption] = useState<Option>();
 
   const { data: listProducts, isLoading } = useListProducts({
-    category: categoryId,
+    listCategories: categoryId,
     page,
     limit: 8,
     sortBy: sortOption?.value.split(" ")[0],

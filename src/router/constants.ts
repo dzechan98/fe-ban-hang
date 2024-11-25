@@ -11,11 +11,7 @@ export const ROUTES = {
     editProfile: "/account/profile/edit",
     purchase: "/account/purchase",
   },
-  users: {
-    root: "/admin/users",
-    new: "/admin/users/new",
-    edit: "/admin/users/:id",
-  },
+  users: "/admin/users",
   categories: {
     root: "/admin/categories",
     new: "/admin/categories/new",

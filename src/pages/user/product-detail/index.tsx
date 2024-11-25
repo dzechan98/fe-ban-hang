@@ -25,7 +25,7 @@ export const ProductDetailPage = () => {
     useListProducts({
       page: 1,
       limit: 5,
-      category: data?.category._id,
+      listCategories: data?.category._id,
       id: data?._id,
     });
 

@@ -12,8 +12,6 @@ import {
   EditProductPage,
   CreateCategoryPage,
   EditCategoryPage,
-  CreateUserPage,
-  EditUserPage,
   ProfilePage,
   EditProfilePage,
   FilterProductPage,
@@ -118,18 +116,8 @@ const useAppRouter = () => {
                       ],
                     },
                     {
-                      path: ROUTES.users.root,
-                      children: [
-                        { index: true, element: <UsersPage /> },
-                        {
-                          path: ROUTES.users.new,
-                          element: <CreateUserPage />,
-                        },
-                        {
-                          path: ROUTES.users.edit,
-                          element: <EditUserPage />,
-                        },
-                      ],
+                      path: ROUTES.users,
+                      element: <UsersPage />,
                     },
                     { path: ROUTES.orders, element: <OrderPage /> },
                   ],

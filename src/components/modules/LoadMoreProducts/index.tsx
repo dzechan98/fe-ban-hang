@@ -19,7 +19,7 @@ export const LoadMoreProduct = ({
   const { data, isLoading } = useListProducts({
     page: index,
     limit,
-    category,
+    listCategories: category,
     id,
   });
   const [listProducts, setListProducts] = useState(data);

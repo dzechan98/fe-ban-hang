@@ -45,7 +45,6 @@ export const useListProducts = ({
   id,
   page = 1,
   limit = 100,
-  category,
   sortBy,
   sortOrder,
   title,
@@ -54,7 +53,6 @@ export const useListProducts = ({
   id?: string;
   page?: number;
   limit?: number;
-  category?: string;
   sortBy?: string;
   sortOrder?: string;
   title?: string;
@@ -66,7 +64,6 @@ export const useListProducts = ({
       page,
       limit,
       id,
-      category,
       sortBy,
       sortOrder,
       title,
@@ -78,7 +75,6 @@ export const useListProducts = ({
           id,
           page,
           limit,
-          category,
           sortBy,
           sortOrder,
           title,

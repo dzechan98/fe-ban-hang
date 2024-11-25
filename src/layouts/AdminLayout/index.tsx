@@ -33,7 +33,7 @@ const listItems = [
   {
     title: "Tài khoản",
     icon: GroupIcon,
-    path: ROUTES.users.root,
+    path: ROUTES.users,
   },
   {
     title: "Sản phẩm",
