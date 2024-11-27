@@ -76,7 +76,6 @@ export const DashboardPage = () => {
   const limit = Number(searchParams.get("limit") ?? 10);
 
   const { data, isLoading, isFetching } = useOverview(page, limit);
-  console.log(data);
   const columnDefs = useMemo(() => getColumns(), []);
 
   const totalPage = useMemo(() => {

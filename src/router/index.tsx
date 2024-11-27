@@ -22,6 +22,7 @@ import {
   OrderSuccessPage,
   OrderPage,
   DashboardPage,
+  ChangePasswordPage,
 } from "../pages";
 import { DefaultLayout } from "@layouts/DefaultLayout";
 import { AdminLayout } from "@layouts/AdminLayout";
@@ -67,6 +68,10 @@ const useAppRouter = () => {
                         {
                           path: ROUTES.account.purchase,
                           element: <PurchasePage />,
+                        },
+                        {
+                          path: ROUTES.account.changePassword,
+                          element: <ChangePasswordPage />,
                         },
                       ],
                     },

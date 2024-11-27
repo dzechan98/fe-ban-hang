@@ -1,15 +1,16 @@
 export const ROUTES = {
   home: "/",
   login: "/login",
+  forgotPassword: "/forgot-password",
   register: "/register",
   dashboard: "/admin/dashboard",
-  forgotPassword: "/forgot-password",
   productDetail: "/products/:id",
   filterProduct: "/filter/:id",
   account: {
     profile: "/account/profile",
     editProfile: "/account/profile/edit",
     purchase: "/account/purchase",
+    changePassword: "/account/change-password",
   },
   users: "/admin/users",
   categories: {

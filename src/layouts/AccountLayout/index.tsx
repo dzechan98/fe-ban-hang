@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import PasswordIcon from "@mui/icons-material/Password";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import { ROUTES } from "@router/constants";
@@ -29,6 +30,12 @@ const menu = [
     icon: <ShoppingBagOutlinedIcon fontSize="small" />,
     title: "Đơn mua",
     path: ROUTES.account.purchase,
+  },
+  {
+    key: 3,
+    icon: <PasswordIcon fontSize="small" />,
+    title: "Đổi mật khẩu",
+    path: ROUTES.account.changePassword,
   },
 ];
 
