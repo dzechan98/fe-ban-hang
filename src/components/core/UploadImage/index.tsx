@@ -9,8 +9,8 @@ import {
   IconButton,
 } from "@mui/material";
 import { AddPhotoAlternate as AddPhotoIcon } from "@mui/icons-material";
-import { toast } from "react-toastify";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { useNotification } from "@hooks/useNotification";
 
 interface UploadImageProps {
   label?: string;
@@ -35,6 +35,7 @@ export const UploadImage: React.FC<UploadImageProps> = ({
   reset = false,
   index,
 }) => {
+  const { error: errorNotification } = useNotification();
   const [image, setImage] = useState<string>(initialImage);
   const [hovered, setHovered] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -72,7 +73,9 @@ export const UploadImage: React.FC<UploadImageProps> = ({
     const file = event.target.files?.[0];
 
     if (!file || !file.type.startsWith("image/")) {
-      toast.error("Vui lòng chỉ chọn một tập tin hình ảnh");
+      errorNotification("Vui lòng chỉ chọn một tập tin hình ảnh", {
+        autoHideDuration: 3000,
+      });
       return;
     }
 
@@ -83,7 +86,9 @@ export const UploadImage: React.FC<UploadImageProps> = ({
       setImage(url);
       onChange?.(url);
     } catch (_) {
-      toast.error("Không thể tải lên hình ảnh. Vui lòng thử lại.");
+      errorNotification("Không thể tải lên hình ảnh. Vui lòng thử lại", {
+        autoHideDuration: 3000,
+      });
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {

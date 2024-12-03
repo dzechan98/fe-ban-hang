@@ -12,9 +12,10 @@ import { ListProducts, SlideImage } from "@components/modules";
 import Parser from "html-react-parser";
 import { useCart } from "@contexts/CartContext";
 import { ProductCart } from "@api/cart";
-import { toast } from "react-toastify";
+import { useNotification } from "@hooks/useNotification";
 
 export const ProductDetailPage = () => {
+  const { error: errorNotification } = useNotification();
   const { id } = useParams();
   const { user } = useAuth();
   const { addItemToCart } = useCart();
@@ -34,11 +35,10 @@ export const ProductDetailPage = () => {
   const handleBuyNow = () => {
     if (user && data) {
       if (data.quantity - data.sold >= count) {
-        const { _id, image_thumbnail, price, title, color } = data;
+        const { _id, image_thumbnail, price, title } = data;
         const product = {
           productId: _id,
           title,
-          color,
           image_thumbnail,
           price,
           quantity: count,
@@ -51,7 +51,9 @@ export const ProductDetailPage = () => {
           },
         });
       } else {
-        toast.error("Số lượng sản phẩm không đủ");
+        errorNotification("Số lượng sản phẩm không đủ", {
+          autoHideDuration: 3000,
+        });
       }
       return;
     }
@@ -61,11 +63,10 @@ export const ProductDetailPage = () => {
 
   const handleAddCart = () => {
     if (user && data) {
-      const { _id, image_thumbnail, price, title, color } = data;
+      const { _id, image_thumbnail, price, title } = data;
       const product: ProductCart = {
         productId: _id,
         title,
-        color,
         image_thumbnail,
         price,
         quantity: count,
@@ -140,11 +141,6 @@ export const ProductDetailPage = () => {
                     data.quantity - data.sold
                   } sản phẩm có sẵn`}</Typography>
                 </Stack>
-                {data.color && (
-                  <Typography variant="body2" color="text.secondary">
-                    Màu: {data.color}
-                  </Typography>
-                )}
                 <Stack direction="row" gap={2}>
                   <Button
                     startIcon={<AddShoppingCartOutlinedIcon />}

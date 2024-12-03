@@ -1,16 +1,11 @@
 import { Page } from "@components/core";
 import { Box, Grid2, Typography, Card, CardContent } from "@mui/material";
-import {
-  AttachMoney,
-  TrendingUp,
-  ShoppingCart,
-  People,
-} from "@mui/icons-material";
+import { AttachMoney, ShoppingCart, People } from "@mui/icons-material";
 import { Table } from "@components/core";
 import React, { useMemo } from "react";
 import { OverviewProduct, useOverview } from "@api/overview";
 import { useSearchParams } from "react-router-dom";
-import { ColDef, ICellRendererParams } from "ag-grid-community";
+import { ColDef } from "ag-grid-community";
 import { capitalizeWords } from "@utils/capitalizeWords";
 
 interface OverviewCardProps {
@@ -44,11 +39,8 @@ const getColumns = () => {
     {
       headerName: "Sản phẩm",
       flex: 1,
+      valueFormatter: ({ data }) => data && capitalizeWords(data.title),
       wrapText: true,
-      cellRenderer: ({ data }: ICellRendererParams<OverviewProduct>) =>
-        data && (
-          <Typography variant="body2">{capitalizeWords(data.title)}</Typography>
-        ),
     },
     {
       headerName: "Giá",
@@ -93,13 +85,6 @@ export const DashboardPage = () => {
               icon={<AttachMoney fontSize="large" color="primary" />}
               title="Tổng Doanh thu"
               value={`${data.totalRevenue.toLocaleString("vi-VN")}₫`}
-            />
-          </Grid2>
-          <Grid2 size={6}>
-            <OverviewCard
-              icon={<TrendingUp fontSize="large" color="secondary" />}
-              title="Lợi nhuận"
-              value="45,678 "
             />
           </Grid2>
           <Grid2 size={6}>

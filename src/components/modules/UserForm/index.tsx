@@ -7,11 +7,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { getError } from "@utils/getError";
 import { useEffect, useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { toast } from "react-toastify";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import * as yup from "yup";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "@hooks/useNotification";
 
 const genderOptions = [
   {
@@ -22,13 +22,10 @@ const genderOptions = [
     label: "Nữ",
     value: "Nữ",
   },
-  {
-    label: "Khác",
-    value: "Khác",
-  },
 ];
 
 export const UserForm = () => {
+  const { success, error: errorNotification } = useNotification();
   const { user } = useAuth();
   const editUserMutation = useEditUser();
   const queryClient = useQueryClient();
@@ -57,10 +54,12 @@ export const UserForm = () => {
       try {
         await editUserMutation.mutateAsync({ id: user._id, input: value });
         queryClient.invalidateQueries({ queryKey: ["me"] });
-        toast.success("Cập nhật tài khoản thành công");
+        success("Cập nhật tài khoản thành công", {
+          autoHideDuration: 3000,
+        });
         navigate(-1);
       } catch (error) {
-        toast.error(getError(error));
+        errorNotification(getError(error), { autoHideDuration: 3000 });
       }
     }
   });

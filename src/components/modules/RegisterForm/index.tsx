@@ -8,10 +8,11 @@ import { RegisterInput, useRegister } from "@api/auth";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@router/constants";
 import { usePasswordVisibility } from "@hooks/usePasswordVisible";
-import { toast } from "react-toastify";
 import { getError } from "@utils/getError";
+import { useNotification } from "@hooks/useNotification";
 
 export const RegisterForm = () => {
+  const { error: errorNotification } = useNotification();
   const { mutate, isPending } = useRegister();
   const navigate = useNavigate();
   const passwordVisible = usePasswordVisibility();
@@ -21,7 +22,10 @@ export const RegisterForm = () => {
       yup.object({
         name: yup.string().required(),
         email: yup.string().email().required(),
-        password: yup.string().required().min(8),
+        password: yup
+          .string()
+          .required()
+          .min(8, "Mật khẩu mới phải chứa ít nhất 8 ký tự"),
       }),
     []
   );
@@ -36,7 +40,7 @@ export const RegisterForm = () => {
         navigate(ROUTES.home);
       },
       onError: (error) => {
-        toast.error(getError(error));
+        errorNotification(getError(error), { autoHideDuration: 3000 });
       },
     });
   });

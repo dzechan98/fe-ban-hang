@@ -14,9 +14,9 @@ import { getError } from "@utils/getError";
 import { useEffect, useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useMatch, useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import * as yup from "yup";
 import ReactQuill from "react-quill";
+import { useNotification } from "@hooks/useNotification";
 
 const categoryOptions = (categories: CategoryResponse[]) => {
   return categories.map((category) => ({
@@ -26,6 +26,7 @@ const categoryOptions = (categories: CategoryResponse[]) => {
 };
 
 export const ProductForm = () => {
+  const { success, error: errorNotification } = useNotification();
   const isAddMode = Boolean(useMatch(ROUTES.products.new));
   const { id } = useParams();
 
@@ -50,7 +51,6 @@ export const ProductForm = () => {
           .min(0, "Số lượng của sản phẩm không thể âm"),
         price: yup.number().required().min(0, "Giá của sản phẩm không thể âm"),
         category: yup.string().required(),
-        color: yup.string(),
         images: yup
           .array()
           .of(yup.string().required("URL hình ảnh không hợp lệ"))
@@ -75,11 +75,12 @@ export const ProductForm = () => {
     if (!id) {
       try {
         await addProductMutation.mutateAsync(formatValues);
-        toast.success("Thêm sản phẩm thành công");
+        success("Thêm sản phẩm thành công", {
+          autoHideDuration: 3000,
+        });
         reset({
           title: "",
           description: "",
-          color: "",
           quantity: undefined,
           price: undefined,
           category: "",
@@ -89,7 +90,7 @@ export const ProductForm = () => {
         setDesc("");
         setResetImage(!resetImages);
       } catch (error) {
-        toast.error(getError(error));
+        errorNotification(getError(error), { autoHideDuration: 3000 });
       }
 
       return;
@@ -97,10 +98,12 @@ export const ProductForm = () => {
 
     try {
       await editProductMutation.mutateAsync({ id, input: formatValues });
-      toast.success("Cập nhật sản phẩm thành công");
+      success("Cập nhật sản phẩm thành công", {
+        autoHideDuration: 3000,
+      });
       navigate(-1);
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), { autoHideDuration: 3000 });
     }
   });
 
@@ -108,7 +111,6 @@ export const ProductForm = () => {
     if (product) {
       setValue("title", product.title);
       setDesc(product.description as string);
-      setValue("color", product.color);
       setValue("price", product.price);
       setValue("image_thumbnail", product.image_thumbnail);
       setValue("quantity", product.quantity);
@@ -134,7 +136,7 @@ export const ProductForm = () => {
               }}
             />
           </Grid2>
-          <Grid2 size={6}>
+          <Grid2 size={4}>
             <RHFSelect
               name="category"
               label="Danh mục"
@@ -142,7 +144,7 @@ export const ProductForm = () => {
               options={categoryOptions(listCategories?.results ?? [])}
             />
           </Grid2>
-          <Grid2 size={6}>
+          <Grid2 size={4}>
             <RHFTextField
               label="Số lượng"
               controlProps={{
@@ -155,7 +157,7 @@ export const ProductForm = () => {
               }}
             />
           </Grid2>
-          <Grid2 size={6}>
+          <Grid2 size={4}>
             <RHFTextField
               label="Giá"
               controlProps={{
@@ -164,18 +166,6 @@ export const ProductForm = () => {
               }}
               textFieldProps={{
                 type: "number",
-                fullWidth: true,
-              }}
-            />
-          </Grid2>
-          <Grid2 size={6}>
-            <RHFTextField
-              label="Màu sắc"
-              controlProps={{
-                name: "color",
-                control,
-              }}
-              textFieldProps={{
                 fullWidth: true,
               }}
             />

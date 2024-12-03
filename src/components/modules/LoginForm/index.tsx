@@ -3,15 +3,16 @@ import { Button, CircularProgress, Stack, Typography } from "@mui/material";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { RHFTextField, RouterLink, VisiblePassword } from "@components/core";
+import { RHFTextField, VisiblePassword } from "@components/core";
 import { LoginInput, useLogin } from "@api/auth";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@router/constants";
 import { usePasswordVisibility } from "@hooks/usePasswordVisible";
-import { toast } from "react-toastify";
 import { getError } from "@utils/getError";
+import { useNotification } from "@hooks/useNotification";
 
 export const LoginForm = () => {
+  const { error: errorNotification } = useNotification();
   const { mutate, isPending } = useLogin();
   const navigate = useNavigate();
   const passwordVisible = usePasswordVisibility();
@@ -20,7 +21,10 @@ export const LoginForm = () => {
     () =>
       yup.object({
         email: yup.string().email().required(),
-        password: yup.string().required().min(8),
+        password: yup
+          .string()
+          .required()
+          .min(8, "Mật khẩu mới phải chứa ít nhất 8 ký tự"),
       }),
     []
   );
@@ -38,7 +42,12 @@ export const LoginForm = () => {
           navigate(ROUTES.home);
         },
         onError: (error) => {
-          toast.error(getError(error));
+          const msg =
+            getError(error) !== "Đã có lỗi xảy ra"
+              ? "Tài khoản hoặc mật khẩu không chính xác"
+              : "Đã có lỗi xảy ra";
+
+          errorNotification(msg, { autoHideDuration: 3000 });
         },
       }
     );
@@ -76,9 +85,6 @@ export const LoginForm = () => {
             control,
           }}
         />
-        <RouterLink to={ROUTES.forgotPassword}>
-          <Typography>Quên mật khẩu</Typography>
-        </RouterLink>
         <Button type="submit" variant="outlined" size="large">
           {isPending ? (
             <CircularProgress size={26} />

@@ -204,11 +204,6 @@ export const CartPage = () => {
                     >
                       {product.title}
                     </Typography>
-                    {product.color && (
-                      <Typography variant="body2">
-                        Màu: {product.color}
-                      </Typography>
-                    )}
                   </Box>
                 </Stack>
               </Stack>

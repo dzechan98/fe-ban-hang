@@ -7,6 +7,7 @@ import {
 import { RHFTextField } from "@components/core";
 import { useAuth } from "@contexts/UserContext";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useNotification } from "@hooks/useNotification";
 import {
   Box,
   Button,
@@ -19,7 +20,6 @@ import {
 import { getError } from "@utils/getError";
 import React, { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import * as yup from "yup";
 
 interface AddressFormProps {
@@ -33,6 +33,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   addressId,
   onTypeView,
 }) => {
+  const { error: errorNotification } = useNotification();
   const isAddMode = type === "add";
   const { user } = useAuth();
   const { data: address } = useGetAddress(addressId);
@@ -75,7 +76,9 @@ export const AddressForm: React.FC<AddressFormProps> = ({
       await editAddressMutation.mutateAsync({ id: addressId, input: body });
       onTypeView?.();
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), {
+        autoHideDuration: 3000,
+      });
     }
   });
 

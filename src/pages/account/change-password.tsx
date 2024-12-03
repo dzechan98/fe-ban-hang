@@ -2,15 +2,16 @@ import { ChangePasswordInput, useChangePassword } from "@api/auth";
 import { Page, RHFTextField, VisiblePassword } from "@components/core";
 import { useAuth } from "@contexts/UserContext";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useNotification } from "@hooks/useNotification";
 import { usePasswordVisibility } from "@hooks/usePasswordVisible";
 import { Box, Button, Grid2, Stack, Typography } from "@mui/material";
 import { getError } from "@utils/getError";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import * as yup from "yup";
 
 export const ChangePasswordPage = () => {
+  const { success, error: errorNotification } = useNotification();
   const { user } = useAuth();
   const changePasswordSchema = useMemo(
     () =>
@@ -18,20 +19,7 @@ export const ChangePasswordPage = () => {
         newPassword: yup
           .string()
           .required()
-          .min(8, "Mật khẩu mới phải chứa ít nhất 8 ký tự.")
-          .matches(
-            /[A-Z]/,
-            "Mật khẩu mới phải bao gồm ít nhất một chữ cái in hoa."
-          )
-          .matches(
-            /[a-z]/,
-            "Mật khẩu mới phải bao gồm ít nhất một chữ cái thường."
-          )
-          .matches(/\d/, "Mật khẩu mới phải bao gồm ít nhất một chữ số.")
-          .matches(
-            /[!@#$%^&*]/,
-            "Mật khẩu mới phải bao gồm ít nhất một ký tự đặc biệt."
-          ),
+          .min(8, "Mật khẩu mới phải chứa ít nhất 8 ký tự"),
         confirmNewPassword: yup
           .string()
           .required()
@@ -55,9 +43,9 @@ export const ChangePasswordPage = () => {
         userId: String(user?._id),
       });
       reset();
-      toast.success("Đổi mật khẩu thành công");
+      success("Đổi mật khẩu thành công", { autoHideDuration: 3000 });
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), { autoHideDuration: 3000 });
     }
   });
 

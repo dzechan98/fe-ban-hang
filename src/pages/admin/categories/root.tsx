@@ -9,13 +9,13 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useDisclosure } from "@hooks/useDisclosure";
 import { ROUTES } from "@router/constants";
-import { toast } from "react-toastify";
 import { getError } from "@utils/getError";
 import {
   CategoryResponse,
   useDeleteCategory,
   useListCategories,
 } from "@api/categories";
+import { useNotification } from "@hooks/useNotification";
 
 const styleCenter = {
   display: "flex",
@@ -53,9 +53,6 @@ const getColumns = (
             />
           </Stack>
         ),
-      cellStyle: {
-        textAlign: "center",
-      },
     },
     {
       headerName: "Thao tác",
@@ -89,6 +86,7 @@ const getColumns = (
 };
 
 export const CategoriesPage = () => {
+  const { success, error: errorNotification } = useNotification();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const page = Number(searchParams.get("page") ?? 1);
@@ -122,9 +120,9 @@ export const CategoriesPage = () => {
       await deleteCategoryMutation.mutateAsync(idCategory);
       setIdCategory("");
       deleteCategoryDisclosure.onClose();
-      toast.success("Xóa danh mục thành công");
+      success("Xóa danh mục thành công", { autoHideDuration: 3000 });
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), { autoHideDuration: 3000 });
     }
   };
 

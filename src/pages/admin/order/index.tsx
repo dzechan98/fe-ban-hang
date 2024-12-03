@@ -12,7 +12,7 @@ import { useSearchParams } from "react-router-dom";
 import { useMemo } from "react";
 import dayjs from "dayjs";
 import { getError } from "@utils/getError";
-import { toast } from "react-toastify";
+import { useNotification } from "@hooks/useNotification";
 
 const styleCenter = {
   display: "flex",
@@ -107,6 +107,20 @@ const getOrderActions = (
           </Tooltip>
         </>
       );
+
+    case "shipped":
+      return (
+        <Tooltip title="Hủy đơn hàng">
+          <Button
+            color="error"
+            size="small"
+            variant="outlined"
+            onClick={() => onCancelOrder(data._id)}
+          >
+            Hủy đơn
+          </Button>
+        </Tooltip>
+      );
     default:
       return null;
   }
@@ -141,7 +155,19 @@ const getColumns = (
     {
       headerName: "Tổng giá",
       valueGetter: ({ data }) =>
-        data && data.totalPrice.toLocaleString("vi-VN"),
+        data && `₫${data.totalPrice.toLocaleString("vi-VN")}`,
+      cellStyle: styleCenter,
+    },
+    {
+      headerName: "Ngày giao hàng",
+      valueGetter: ({ data }) =>
+        data?.shippedDate && dayjs(data.shippedDate).format("DD/MM/YYYY"),
+      cellStyle: styleCenter,
+    },
+    {
+      headerName: "Ngày nhận hàng",
+      valueGetter: ({ data }) =>
+        data?.deliveredDate && dayjs(data.deliveredDate).format("DD/MM/YYYY"),
       cellStyle: styleCenter,
     },
     {
@@ -197,6 +223,7 @@ const getColumns = (
 };
 
 export const OrderPage = () => {
+  const { error: errorNotification } = useNotification();
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
@@ -210,7 +237,7 @@ export const OrderPage = () => {
     try {
       await cancelOrderMutation.mutateAsync(orderId);
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), { autoHideDuration: 3000 });
     }
   };
 
@@ -221,7 +248,7 @@ export const OrderPage = () => {
     try {
       await updateStatusOrderMutation.mutateAsync({ orderId, status });
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), { autoHideDuration: 3000 });
     }
   };
 
@@ -238,7 +265,7 @@ export const OrderPage = () => {
 
   return (
     <Page title="Danh sách đơn hàng">
-      <Typography color="primary.main" fontSize="24px" mt={1}>
+      <Typography color="primary.main" fontSize="24px" my={1}>
         Danh sách đơn hàng
       </Typography>
       <Table

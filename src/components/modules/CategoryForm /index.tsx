@@ -6,16 +6,17 @@ import {
 } from "@api/categories";
 import { RHFTextField, UploadImage } from "@components/core";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useNotification } from "@hooks/useNotification";
 import { Button, Grid2, Stack } from "@mui/material";
 import { ROUTES } from "@router/constants";
 import { getError } from "@utils/getError";
 import { useEffect, useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useMatch, useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import * as yup from "yup";
 
 export const CategoryForm = () => {
+  const { success, error: errorNotification } = useNotification();
   const isAddMode = Boolean(useMatch(ROUTES.categories.new));
   const { id } = useParams();
 
@@ -44,14 +45,14 @@ export const CategoryForm = () => {
     if (!id) {
       try {
         await addCategoryMutation.mutateAsync(value);
-        toast.success("Thêm danh mục thành công");
+        success("Thêm danh mục thành công", { autoHideDuration: 3000 });
         reset({
           title: "",
           image_url: "",
         });
         setResetImage(!resetImages);
       } catch (error) {
-        toast.error(getError(error));
+        errorNotification(getError(error), { autoHideDuration: 3000 });
       }
 
       return;
@@ -59,10 +60,12 @@ export const CategoryForm = () => {
 
     try {
       await editCategoryMutation.mutateAsync({ id, input: value });
-      toast.success("Cập nhật danh mục thành công");
+      success("Cập nhật danh mục thành công", {
+        autoHideDuration: 3000,
+      });
       navigate(-1);
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), { autoHideDuration: 3000 });
     }
   });
 

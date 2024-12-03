@@ -9,7 +9,6 @@ export interface ProductInput {
   price: number;
   category: string;
   quantity: number;
-  color?: string;
   image_thumbnail: string;
   images: string[];
 }

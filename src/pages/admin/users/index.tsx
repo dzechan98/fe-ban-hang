@@ -7,9 +7,9 @@ import { useSearchParams } from "react-router-dom";
 import { capitalizeWords } from "@utils/capitalizeWords";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useDisclosure } from "@hooks/useDisclosure";
-import { toast } from "react-toastify";
 import { getError } from "@utils/getError";
 import { useDeleteUser, useListUsers, UserResponse } from "@api/users";
+import { useNotification } from "@hooks/useNotification";
 
 const styleCenter = {
   display: "flex",
@@ -48,6 +48,12 @@ const getColumns = (onClickDelete: (id: string) => void) => {
       cellStyle: { textAlign: "center" },
     },
     {
+      headerName: "Giới tính",
+      field: "gender",
+      width: 120,
+      cellStyle: styleCenter,
+    },
+    {
       headerName: "Số điện thoại",
       field: "phone",
       cellStyle: styleCenter,
@@ -59,6 +65,7 @@ const getColumns = (onClickDelete: (id: string) => void) => {
       cellStyle: styleCenter,
       suppressColumnsToolPanel: true,
       sortable: false,
+      width: 120,
       cellRenderer: ({ data }: ICellRendererParams<UserResponse>) =>
         data && (
           <IconButton
@@ -75,6 +82,7 @@ const getColumns = (onClickDelete: (id: string) => void) => {
 };
 
 export const UsersPage = () => {
+  const { success, error: errorNotification } = useNotification();
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
@@ -100,9 +108,11 @@ export const UsersPage = () => {
       await deleteUserMutation.mutateAsync(idUser);
       setIdUser("");
       deleteDisclosure.onClose();
-      toast.success("Xóa tài khoản thành công");
+      success("Xóa tài khoản thành công", {
+        autoHideDuration: 3000,
+      });
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), { autoHideDuration: 3000 });
     }
   };
 

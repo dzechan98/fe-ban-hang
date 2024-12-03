@@ -4,7 +4,6 @@ import { QueryContext } from "@api/type";
 
 export interface ProductCart {
   productId: string;
-  color?: string;
   price: number;
   quantity: number;
   image_thumbnail: string;

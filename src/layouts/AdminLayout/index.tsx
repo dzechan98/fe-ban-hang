@@ -18,7 +18,6 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { ROUTES } from "@router/constants";
 import { useAuth } from "@contexts/UserContext";
-import { capitalizeWords } from "@utils/capitalizeWords";
 import { Button, Stack } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 
@@ -26,7 +25,7 @@ const drawerWidth = 240;
 
 const listItems = [
   {
-    title: "Dashboard",
+    title: "Bảng điều khiển",
     icon: DashboardIcon,
     path: ROUTES.dashboard,
   },
@@ -64,7 +63,7 @@ export const AdminLayout = () => {
       >
         <Toolbar>
           <Typography variant="h6" noWrap component="div">
-            {user && `Xin chào ${capitalizeWords(user.email.toLowerCase())}`}
+            {user && `Xin chào Admin`}
           </Typography>
         </Toolbar>
       </AppBar>

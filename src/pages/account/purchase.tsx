@@ -8,6 +8,7 @@ import {
 import { ConfirmDialog, Page } from "@components/core";
 import { useAuth } from "@contexts/UserContext";
 import { useDisclosure } from "@hooks/useDisclosure";
+import { useNotification } from "@hooks/useNotification";
 import {
   Box,
   Button,
@@ -21,7 +22,6 @@ import {
 } from "@mui/material";
 import { getError } from "@utils/getError";
 import { useState } from "react";
-import { toast } from "react-toastify";
 
 const StyledBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
@@ -62,6 +62,7 @@ const mappingStatusOrder = (
 };
 
 export const PurchasePage = () => {
+  const { success, error: errorNotification } = useNotification();
   const { user } = useAuth();
   const { data } = useOrdersByMe(user?._id);
   const queryKey = ["ordersUser", user?._id];
@@ -74,9 +75,11 @@ export const PurchasePage = () => {
   const handleConfirmCancelOrder = async () => {
     try {
       await cancelOrderMutation.mutateAsync(orderId);
-      toast.success("Hủy đơn hàng thành công");
+      success("Hủy đơn hàng thành công", {
+        autoHideDuration: 3000,
+      });
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), { autoHideDuration: 3000 });
     } finally {
       setOrderId("");
       cancelOrderDisclosure.onClose();
@@ -90,7 +93,7 @@ export const PurchasePage = () => {
     try {
       await updateStatusOrderMutation.mutateAsync({ orderId, status });
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), { autoHideDuration: 3000 });
     }
   };
 
@@ -153,11 +156,6 @@ export const PurchasePage = () => {
                       >
                         {product.title}
                       </Typography>
-                      {product.color && (
-                        <Typography variant="body2" color="text.secondary">
-                          Màu: {product.color}
-                        </Typography>
-                      )}
                       <Typography variant="body2">
                         x{product.quantity}
                       </Typography>

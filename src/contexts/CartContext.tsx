@@ -11,8 +11,8 @@ import {
 } from "@api/cart";
 import { useAuth } from "@contexts/UserContext";
 import { Outlet } from "react-router-dom";
-import { toast } from "react-toastify";
 import { getError } from "@utils/getError";
+import { useNotification } from "@hooks/useNotification";
 
 interface CartContextType {
   cart?: CartResponse;
@@ -26,8 +26,11 @@ interface CartContextType {
 const CartContext = createContext<CartContextType>({} as CartContextType);
 
 export const CartProvider = () => {
+  const { error: errorNotification } = useNotification();
   const { user } = useAuth();
+
   const queryKey = ["cart", user?._id];
+
   const { data: cartData } = useGetCart(user?._id);
   const addCart = useAddCart({ queryKey });
   const decrementCart = useDecrementCart({ queryKey });
@@ -39,7 +42,7 @@ export const CartProvider = () => {
     try {
       await addCart.mutateAsync(item);
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), { autoHideDuration: 3000 });
     }
   };
 
@@ -47,7 +50,7 @@ export const CartProvider = () => {
     try {
       await decrementCart.mutateAsync(productId);
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), { autoHideDuration: 3000 });
     }
   };
 
@@ -55,7 +58,7 @@ export const CartProvider = () => {
     try {
       await incrementCart.mutateAsync(productId);
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), { autoHideDuration: 3000 });
     }
   };
 
@@ -63,7 +66,7 @@ export const CartProvider = () => {
     try {
       await deleteCart.mutateAsync(productId);
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), { autoHideDuration: 3000 });
     }
   };
 
@@ -71,7 +74,7 @@ export const CartProvider = () => {
     try {
       await clearCart.mutateAsync();
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), { autoHideDuration: 3000 });
     }
   };
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Page } from "@components/core";
 import {
   Box,
@@ -21,10 +22,10 @@ import { usePopover } from "@hooks/usePopover";
 import { AddressResponse, useAddressDefault } from "@api/address";
 import dayjs from "dayjs";
 import { OrderInput, useCreateOrder } from "@api/order";
-import { toast } from "react-toastify";
 import { getError } from "@utils/getError";
 import CircularProgress from "@mui/material/CircularProgress";
 import { ROUTES } from "@router/constants";
+import { useNotification } from "@hooks/useNotification";
 
 const StyledBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
@@ -51,11 +52,6 @@ const paymentOptions = [
     name: "Thanh toán khi nhận hàng",
     value: "cash_on_delivery",
   },
-  {
-    id: "2",
-    name: "Chuyển khoản",
-    value: "bank_transfer",
-  },
 ];
 
 const columns = [
@@ -77,6 +73,7 @@ const formattedDate = (deliveryTime: string) => {
 };
 
 export const CheckoutPage = () => {
+  const { error: errorNotification } = useNotification();
   const navigate = useNavigate();
   const location = useLocation();
   const products: ProductSelected[] = location.state?.products || [];
@@ -121,7 +118,7 @@ export const CheckoutPage = () => {
         },
       });
     } catch (error) {
-      toast.error(getError(error));
+      errorNotification(getError(error), { autoHideDuration: 3000 });
     } finally {
       setLoading(false);
     }
@@ -220,11 +217,6 @@ export const CheckoutPage = () => {
                     >
                       {product.title}
                     </Typography>
-                    {product.color && (
-                      <Typography variant="body2" color="text.secondary">
-                        Màu: {product.color}
-                      </Typography>
-                    )}
                   </Box>
                 </Stack>
               </Grid2>
