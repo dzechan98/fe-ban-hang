@@ -1,5 +1,5 @@
-import { ConfirmDialog, Page, RouterLink } from "@components/core";
-import { Avatar, Button, IconButton, Stack, Typography } from "@mui/material";
+import { ConfirmDialog, Page } from "@components/core";
+import { Avatar, IconButton, Stack, Typography } from "@mui/material";
 import { ColDef, ICellRendererParams } from "ag-grid-community";
 import { Table } from "@components/core";
 import { useMemo, useState } from "react";
@@ -41,11 +41,10 @@ const getColumns = (onClickDelete: (id: string) => void) => {
       autoHeight: true,
       cellRenderer: ({ data }: ICellRendererParams<UserResponse>) =>
         data && (
-          <Stack alignItems="center" justifyContent="center" padding={1}>
+          <Stack padding={1}>
             <Avatar src={data.image} alt={data.name} />
           </Stack>
         ),
-      cellStyle: { textAlign: "center" },
     },
     {
       headerName: "Giới tính",
@@ -138,9 +137,6 @@ export const UsersPage = () => {
         <Typography color="primary.main" fontSize="24px">
           Danh sách tài khoản
         </Typography>
-        <RouterLink to="./new">
-          <Button variant="outlined">Thêm tài khoản</Button>
-        </RouterLink>
       </Stack>
       <Table
         rowData={data?.results ?? []}

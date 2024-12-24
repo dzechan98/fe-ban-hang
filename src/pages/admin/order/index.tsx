@@ -36,14 +36,6 @@ const paymentStatusMessages: Record<
   },
 };
 
-const paymentStatusRenderer = ({
-  value,
-}: ICellRendererParams<OrderResponse>) => {
-  const status =
-    paymentStatusMessages[value] || paymentStatusMessages["pending"];
-  return <Chip label={status.label} color={status.color} />;
-};
-
 const statusMessages: Record<
   string,
   {
@@ -67,11 +59,6 @@ const statusMessages: Record<
     label: "Đã hủy",
     color: "error",
   },
-};
-
-const statusRenderer = ({ value }: ICellRendererParams<OrderResponse>) => {
-  const status = statusMessages[value] || statusMessages["pending"];
-  return <Chip label={status.label} color={status.color} />;
 };
 
 const getOrderActions = (
@@ -180,8 +167,13 @@ const getColumns = (
     },
     {
       headerName: "Trạng thái",
-      field: "status",
-      cellRenderer: statusRenderer,
+      cellRenderer: ({ data }: ICellRendererParams<OrderResponse>) =>
+        data && (
+          <Chip
+            label={statusMessages[data.status || "pending"].label}
+            color={statusMessages[data.status || "pending"].color}
+          />
+        ),
       cellStyle: styleCenter,
     },
     {
@@ -203,8 +195,15 @@ const getColumns = (
     },
     {
       headerName: "Trạng thái thanh toán",
-      field: "paymentStatus",
-      cellRenderer: paymentStatusRenderer,
+      cellRenderer: ({ data }: ICellRendererParams<OrderResponse>) =>
+        data && data.status !== "canceled" ? (
+          <Chip
+            label={paymentStatusMessages[data.paymentStatus || "pending"].label}
+            color={paymentStatusMessages[data.paymentStatus || "pending"].color}
+          />
+        ) : (
+          ""
+        ),
       cellStyle: styleCenter,
     },
     {

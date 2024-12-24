@@ -120,6 +120,11 @@ export const PurchasePage = () => {
               <Typography>Mã đơn hàng: #{order.orderCode}</Typography>
               <Chip {...mappingStatusOrder(order.status as Status)} />
             </Stack>
+            <Typography variant="body2">
+              Địa chỉ nhận hàng: {order.shippingAddress?.street},{" "}
+              {order.shippingAddress?.ward}, {order.shippingAddress?.district},{" "}
+              {order.shippingAddress?.city}
+            </Typography>
             {order.items.map((product) => (
               <Grid2
                 container

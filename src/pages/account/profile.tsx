@@ -23,7 +23,7 @@ const infoUser = (user?: UserResponse | null) => {
     },
     {
       label: "Ngày sinh",
-      value: dayjs(user?.birthday).format("DD/MM/YYYY"),
+      value: user?.birthday ? dayjs(user?.birthday).format("DD/MM/YYYY") : "",
     },
     {
       label: "Giới tính",
@@ -48,14 +48,14 @@ export const ProfilePage = () => {
       <Stack marginTop={2} gap={3}>
         {infoUser(user).map((item, index) => (
           <React.Fragment key={index}>
-            {item.value && (
+            {
               <Stack direction="row" gap={3}>
                 <Typography width={160} color="#555555cc" variant="body2">
                   {item.label}
                 </Typography>
                 <Typography variant="body2">{item.value}</Typography>
               </Stack>
-            )}
+            }
           </React.Fragment>
         ))}
         <Stack direction="row" justifyContent="flex-end">
