@@ -4,7 +4,7 @@ export * from "./RegisterForm";
 export * from "./LoadMoreProducts";
 export * from "./SliderImage";
 export * from "./ProductForm";
-export * from "./CategoryForm ";
+export * from "./CategoryForm";
 export * from "./UserForm";
 export * from "./ListProducts";
 export * from "./CartPreview";
